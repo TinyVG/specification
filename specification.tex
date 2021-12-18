@@ -552,6 +552,9 @@ The polygon specified in \texttt{polygon} must be drawn using the
 rule}, that means that if for any point to be inside the polygon, a line
 to infinity must cross an even number of polygon segments.
 
+
+\includegraphics{graphics/fill-polygon.pdf}
+
 \hypertarget{point}{%
 \subparagraph{\texorpdfstring{\texttt{Point}}{Point}}\label{point}}
 
@@ -611,6 +614,8 @@ header.
 
 The rectangles must be drawn first to last, so in the order they appear
 in the file.
+
+\includegraphics{graphics/fill-rectangles.pdf}
 
 \hypertarget{rectangle}{%
 \subparagraph{\texorpdfstring{\texttt{Rectangle}}{Rectangle}}\label{rectangle}}
@@ -685,6 +690,9 @@ lines & \texttt{{[}line\_count\ +\ 1{]}Line} & The set of lines. \\
 
 Draws \texttt{line\_count} + 1 lines with \texttt{line\_style}. Each line is \texttt{line\_width} units wide, and at least a single display pixel. This means that \texttt{line\_width} of 0 is still visible, even though only marginally. This allows very thin outlines.
 
+
+\includegraphics{graphics/draw-lines.pdf}
+
 \hypertarget{line}{%
 \subparagraph{\texorpdfstring{\texttt{Line}}{Line}}\label{line}}
 
@@ -728,6 +736,8 @@ though only marginally. This allows very thin outlines.
 The lines are drawn between consecutive points as well as the first and
 the last point.
 
+\includegraphics{graphics/draw-line-loop.pdf}
+
 \hypertarget{draw-line-strip}{%
 \paragraph{Draw Line Strip}\label{draw-line-strip}}
 
@@ -755,8 +765,9 @@ line is \texttt{line\_width} units wide, and at least a single display
 pixel. This means that \texttt{line\_width} of 0 is still visible, even
 though only marginally. This allows very thin outlines.
 
-The lines are drawn between consecutive points, but contrary to
-\emph{Draw Line Loop}, the first and the last point are not connected.
+The lines are drawn between consecutive points, but contrary to \emph{Draw Line Loop}, the first and the last point are not connected.
+
+\includegraphics{graphics/draw-line-strip.pdf}
 
 \hypertarget{draw-line-path}{%
 \paragraph{Draw Line Path}\label{draw-line-path}}
