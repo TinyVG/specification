@@ -22,7 +22,7 @@ The core features are:
 The specification is shipped as PDF, TXT and CommonMark documents. To build these, you have to install `xetex` + `texlive` packages, `pandoc` and `rsvg`. After these are installed, you can then build the final files by invoking main:
 
 ```sh-session
-[user@host specification]$ make -B
+[user@host specification]$ make
 rm -f *.aux *.log *.pdf *.fls *.synctex.gz *.fdb_latexmk
 rsvg-convert "graphics/coordinates.svg" -f pdf -o "graphics/coordinates.pdf"
 rsvg-convert "graphics/gradients.svg" -f pdf -o "graphics/gradients.pdf"
