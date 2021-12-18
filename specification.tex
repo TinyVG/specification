@@ -3,6 +3,7 @@
 \PassOptionsToPackage{hyphens}{url}
 %
 \documentclass[]{article}
+\usepackage[a4paper, margin=1in]{geometry}
 % \author{}
 % \date{}
 
@@ -113,13 +114,15 @@
 \begin{document}
 
 \hypertarget{tiny-vector-graphics-specification}{%
-\section{Tiny Vector Graphics
-(Specification)}\label{tiny-vector-graphics-specification}}
+\section{Tiny Vector Graphics(Specification)}\label{tiny-vector-graphics-specification}}
 
-\textbf{Abstract:} The tiny vector graphics format is a binary file
+\begin{abstract}
+The tiny vector graphics format is a binary file
 format that encodes a list of vector graphic primitives. It is tailored
 to have a tiny memory footprint and simple implementations, while
 lifting small file size over encoding simplicity.
+\end{abstract}
+
 
 \hypertarget{introduction}{%
 \subsection{Introduction}\label{introduction}}
@@ -244,7 +247,7 @@ Each TVG file starts with a header defining some global values for the
 file like scale and image size. The header is always at offset 0 in a
 file.
 
-\begin{longtable}[]{@{}lll@{}}
+\begin{longtable}[]{@{}p{1in}p{2in}p{3in}@{}}
 \toprule
 Field & Type & Description \\
 \midrule
@@ -278,7 +281,7 @@ color\_count & \texttt{VarUInt} & The number of colors in the
 The color encoding defines which format the colors in the color table
 will have:
 
-\begin{longtable}[]{@{}lll@{}}
+\begin{longtable}[]{@{}p{1in}p{2in}p{3in}@{}}
 \toprule
 Value & Enumeration & Description \\
 \midrule
@@ -306,7 +309,7 @@ external means. \\
 The coordinate range defines how many bits a
 \protect\hyperlink{units}{\texttt{Unit}} value uses:
 
-\begin{longtable}[]{@{}lll@{}}
+\begin{longtable}[]{@{}p{1in}p{2in}p{3in}@{}}
 \toprule
 Value & Enumeration & Description \\
 \midrule
@@ -330,7 +333,7 @@ always encode bits 0\ldots6, the second one encodes 8\ldots13, and so
 on. Bytes are read until the upper-most bit in the byte is set. The bit
 mappings are done as following:
 
-\begin{longtable}[]{@{}lll@{}}
+\begin{longtable}[]{@{}p{1in}p{2in}p{3in}@{}}
 \toprule
 Byte & Bit Range & Notes \\
 \midrule
@@ -392,7 +395,7 @@ three defined color encodings, each will yield a list of
 
 Each color value is encoded as a sequence of four bytes:
 
-\begin{longtable}[]{@{}lll@{}}
+\begin{longtable}[]{@{}p{1in}p{2in}p{3in}@{}}
 \toprule
 Field & Type & Description \\
 \midrule
@@ -415,7 +418,7 @@ The size of the color table is \texttt{4\ *\ color\_count}.
 
 Each color value is encoded as a sequence of 2 bytes:
 
-\begin{longtable}[]{@{}lll@{}}
+\begin{longtable}[]{@{}p{1in}p{2in}p{3in}@{}}
 \toprule
 Field & Type & Description \\
 \midrule
@@ -437,7 +440,7 @@ colors are fully opaque.
 
 Each color value is encoded as a sequence of 16 bytes:
 
-\begin{longtable}[]{@{}lll@{}}
+\begin{longtable}[]{@{}p{1in}p{2in}p{3in}@{}}
 \toprule
 Field & Type & Description \\
 \midrule
@@ -468,7 +471,7 @@ new 2D primitive to the graphic.
 
 The following commands are available:
 
-\begin{longtable}[]{@{}lll@{}}
+\begin{longtable}[]{@{}p{1in}p{2in}p{3in}@{}}
 \toprule
 Command Index & Name & Short description \\
 \midrule
@@ -492,7 +495,7 @@ command into one. \\
 
 Each command is encoded as a single byte which is split into fields:
 
-\begin{longtable}[]{@{}lll@{}}
+\begin{longtable}[]{@{}p{1in}p{2in}p{3in}@{}}
 \toprule
 Field & Type & Description \\
 \midrule
@@ -522,7 +525,7 @@ points.
 
 The command is structured like this:
 
-\begin{longtable}[]{@{}lll@{}}
+\begin{longtable}[]{@{}p{1in}p{2in}p{3in}@{}}
 \toprule
 Field & Type & Description \\
 \midrule
@@ -554,7 +557,7 @@ to infinity must cross an even number of polygon segments.
 
 Points are a X and Y coordinate pair:
 
-\begin{longtable}[]{@{}lll@{}}
+\begin{longtable}[]{@{}p{1in}p{2in}p{3in}@{}}
 \toprule
 Field & Type & Description \\
 \midrule
@@ -586,7 +589,7 @@ Fills a list of rectangles.
 
 The command is structured like this:
 
-\begin{longtable}[]{@{}lll@{}}
+\begin{longtable}[]{@{}p{1in}p{2in}p{3in}@{}}
 \toprule
 Field & Type & Description \\
 \midrule
@@ -612,7 +615,7 @@ in the file.
 \hypertarget{rectangle}{%
 \subparagraph{\texorpdfstring{\texttt{Rectangle}}{Rectangle}}\label{rectangle}}
 
-\begin{longtable}[]{@{}lll@{}}
+\begin{longtable}[]{@{}p{1in}p{2in}p{3in}@{}}
 \toprule
 Field & Type & Description \\
 \midrule
@@ -636,7 +639,7 @@ below in more detail to keep this section short.
 
 The command is structured like this:
 
-\begin{longtable}[]{@{}lll@{}}
+\begin{longtable}[]{@{}p{1in}p{2in}p{3in}@{}}
 \toprule
 Field & Type & Description \\
 \midrule
@@ -668,37 +671,30 @@ Draws a set of lines.
 
 The command is structured like this:
 
-\begin{longtable}[]{@{}lll@{}}
+\begin{longtable}[]{@{}p{1in}p{2in}p{3in}@{}}
 \toprule
 Field & Type & Description \\
 \midrule
 \endhead
-line\_count & \protect\hyperlink{varuint}{\texttt{VarUInt}} & The number
-of rectangles. This value is offset by 1. \\
-line\_style & \texttt{Style(primary\_style\_kind)} & The style that is
-used to draw the all rectangles. \\
+line\_count & \protect\hyperlink{varuint}{\texttt{VarUInt}} & The number of rectangles. This value is offset by 1. \\
+line\_style & \texttt{Style(primary\_style\_kind)} & The style that is used to draw the all rectangles. \\
 line\_width & \texttt{f32} & The width of the line. \\
 lines & \texttt{{[}line\_count\ +\ 1{]}Line} & The set of lines. \\
 \bottomrule
 \end{longtable}
 
-Draws \texttt{line\_count} + 1 lines with \texttt{line\_style}. Each
-line is \texttt{line\_width} units wide, and at least a single display
-pixel. This means that \texttt{line\_width} of 0 is still visible, even
-though only marginally. This allows very thin outlines.
+Draws \texttt{line\_count} + 1 lines with \texttt{line\_style}. Each line is \texttt{line\_width} units wide, and at least a single display pixel. This means that \texttt{line\_width} of 0 is still visible, even though only marginally. This allows very thin outlines.
 
 \hypertarget{line}{%
 \subparagraph{\texorpdfstring{\texttt{Line}}{Line}}\label{line}}
 
-\begin{longtable}[]{@{}lll@{}}
+\begin{longtable}[]{@{}p{1in}p{2in}p{3in}@{}}
 \toprule
 Field & Type & Description \\
 \midrule
 \endhead
-start & \protect\hyperlink{point}{\texttt{Point}} & Start point of the
-line \\
-end & \protect\hyperlink{point}{\texttt{Point}} & End point of the
-line. \\
+start & \protect\hyperlink{point}{\texttt{Point}} & Start point of the line \\
+end & \protect\hyperlink{point}{\texttt{Point}} & End point of the line. \\
 \bottomrule
 \end{longtable}
 
@@ -709,7 +705,7 @@ Draws a polygon.
 
 The command is structured like this:
 
-\begin{longtable}[]{@{}lll@{}}
+\begin{longtable}[]{@{}p{1in}p{2in}p{3in}@{}}
 \toprule
 Field & Type & Description \\
 \midrule
@@ -739,7 +735,7 @@ Draws a list of consecutive lines.
 
 The command is structured like this:
 
-\begin{longtable}[]{@{}lll@{}}
+\begin{longtable}[]{@{}p{1in}p{2in}p{3in}@{}}
 \toprule
 Field & Type & Description \\
 \midrule
@@ -770,7 +766,7 @@ below in more detail to keep this section short.
 
 The command is structured like this:
 
-\begin{longtable}[]{@{}lll@{}}
+\begin{longtable}[]{@{}p{1in}p{2in}p{3in}@{}}
 \toprule
 Field & Type & Description \\
 \midrule
@@ -797,29 +793,22 @@ Fills a polygon and draws a outline at the same time.
 
 The command is structured like this:
 
-\begin{longtable}[]{@{}lll@{}}
+\begin{longtable}[]{@{}p{1in}p{2in}p{3in}@{}}
 \toprule
 Field & Type & Description \\
 \midrule
 \endhead
 segment\_count & \texttt{u6} & The number of points in the polygon. This
 value is offset by 1. \\
-secondardy\_style\_kind & \texttt{u2} & The secondary style used in this
-command. \\
-fill\_style & \texttt{Style(primary\_style\_kind)} & The style that is
-used to fill the polygon. \\
-line\_style & \texttt{Style(secondardy\_style\_kind)} & The style that
-is used to draw the outline of the polygon. \\
+secondardy\_style\_kind & \texttt{u2} & The secondary style used in this command. \\
+fill\_style & \texttt{Style(primary\_style\_kind)} & The style that is used to fill the polygon. \\
+line\_style & \texttt{Style(secondardy\_style\_kind)} & The style that is used to draw the outline of the polygon. \\
 line\_width & \texttt{f32} & The width of the line. \\
-points & \texttt{{[}segment\_count\ +\ 1{]}Point} & The set of points of
-this polygon. \\
+points & \texttt{{[}segment\_count\ +\ 1{]}Point} & The set of points of this polygon. \\
 \bottomrule
 \end{longtable}
 
-This command is a combination of \emph{Fill Polygon} and \emph{Draw Line
-Loop}. It first performs a \emph{Fill Polygon} with the
-\texttt{fill\_style}, then performs \emph{Draw Line Loop} with
-\texttt{line\_style} and \texttt{line\_width}.
+This command is a combination of \emph{Fill Polygon} and \emph{Draw Line Loop}. It first performs a \emph{Fill Polygon} with the \texttt{fill\_style}, then performs \emph{Draw Line Loop} with \texttt{line\_style} and \texttt{line\_width}.
 
 \includegraphics{graphics/outline-polgon.pdf}
 
@@ -833,7 +822,7 @@ Fills and outlines a list of rectangles.
 
 The command is structured like this:
 
-\begin{longtable}[]{@{}lll@{}}
+\begin{longtable}[]{@{}p{1in}p{2in}p{3in}@{}}
 \toprule
 Field & Type & Description \\
 \midrule
@@ -868,7 +857,7 @@ Fills a path and draws a outline at the same time.
 
 The command is structured like this:
 
-\begin{longtable}[]{@{}lll@{}}
+\begin{longtable}[]{@{}p{1in}p{2in}p{3in}@{}}
 \toprule
 Field & Type & Description \\
 \midrule
@@ -900,7 +889,7 @@ number of points is 64.
 
 There are three types of style available:
 
-\begin{longtable}[]{@{}lll@{}}
+\begin{longtable}[]{@{}p{1in}p{2in}p{3in}@{}}
 \toprule
 Value & Style Type & Description \\
 \midrule
@@ -919,7 +908,7 @@ Left to right the three gradient types:
 \hypertarget{flat-colored}{%
 \paragraph{Flat Colored}\label{flat-colored}}
 
-\begin{longtable}[]{@{}lll@{}}
+\begin{longtable}[]{@{}p{1in}p{2in}p{3in}@{}}
 \toprule
 Field & Type & Description \\
 \midrule
@@ -934,7 +923,7 @@ in the color table.
 \hypertarget{linear-gradient}{%
 \paragraph{Linear Gradient}\label{linear-gradient}}
 
-\begin{longtable}[]{@{}lll@{}}
+\begin{longtable}[]{@{}p{1in}p{2in}p{3in}@{}}
 \toprule
 Field & Type & Description \\
 \midrule
@@ -961,7 +950,7 @@ closed to \texttt{point\_0} or vice versa for \texttt{point\_1}.
 \hypertarget{radial-gradient}{%
 \paragraph{Radial Gradient}\label{radial-gradient}}
 
-\begin{longtable}[]{@{}lll@{}}
+\begin{longtable}[]{@{}p{1in}p{2in}p{3in}@{}}
 \toprule
 Field & Type & Description \\
 \midrule
@@ -1001,7 +990,7 @@ our "pen" is the outline of the shape.
 
 The following instructions to move the "pen" are available:
 
-\begin{longtable}[]{@{}lll@{}}
+\begin{longtable}[]{@{}p{1in}p{2in}p{3in}@{}}
 \toprule
 Instruction Index & Instruction & Short Description \\
 \midrule
@@ -1059,7 +1048,7 @@ is chosen:
 
 The tag looks like this:
 
-\begin{longtable}[]{@{}lll@{}}
+\begin{longtable}[]{@{}p{1in}p{2in}p{3in}@{}}
 \toprule
 Field & Type & Description \\
 \midrule
@@ -1078,7 +1067,7 @@ present. \\
 
 The line instruction draws a straight line to the \texttt{position}.
 
-\begin{longtable}[]{@{}lll@{}}
+\begin{longtable}[]{@{}p{1in}p{2in}p{3in}@{}}
 \toprule
 Field & Type & Description \\
 \midrule
@@ -1093,7 +1082,7 @@ position & \texttt{Point} & The end point of the line. \\
 The horizontal line instruction draws a straight horizontal line to a
 given \texttt{x} coordinate.
 
-\begin{longtable}[]{@{}lll@{}}
+\begin{longtable}[]{@{}p{1in}p{2in}p{3in}@{}}
 \toprule
 Field & Type & Description \\
 \midrule
@@ -1108,7 +1097,7 @@ x & \texttt{Unit} & The new \texttt{x} coordinate. \\
 The vertical line instruction draws a straight vertical line to a given
 \texttt{y} coordinate.
 
-\begin{longtable}[]{@{}lll@{}}
+\begin{longtable}[]{@{}p{1in}p{2in}p{3in}@{}}
 \toprule
 Field & Type & Description \\
 \midrule
@@ -1123,7 +1112,7 @@ y & \texttt{Unit} & The new \texttt{y} coordinate. \\
 The cubic bezier instruction draws a bézier curve with two control
 points.
 
-\begin{longtable}[]{@{}lll@{}}
+\begin{longtable}[]{@{}p{1in}p{2in}p{3in}@{}}
 \toprule
 Field & Type & Description \\
 \midrule
@@ -1144,7 +1133,7 @@ with \texttt{control\_0} being the first control point and
 Draws a circle segment between the current and the \texttt{target}
 point.
 
-\begin{longtable}[]{@{}lll@{}}
+\begin{longtable}[]{@{}p{1in}p{2in}p{3in}@{}}
 \toprule
 Field & Type & Description \\
 \midrule
@@ -1176,7 +1165,7 @@ is necessary to either the left or the right.
 Draws an ellipse segment between the current and the \texttt{target}
 point.
 
-\begin{longtable}[]{@{}lll@{}}
+\begin{longtable}[]{@{}p{1in}p{2in}p{3in}@{}}
 \toprule
 Field & Type & Description \\
 \midrule
@@ -1221,7 +1210,7 @@ This instruction doesn't have additional data encoded.
 The quadratic bezier instruction draws a bézier curve with a single
 control point.
 
-\begin{longtable}[]{@{}lll@{}}
+\begin{longtable}[]{@{}p{1in}p{2in}p{3in}@{}}
 \toprule
 Field & Type & Description \\
 \midrule

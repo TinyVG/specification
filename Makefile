@@ -11,8 +11,8 @@ all: specification.pdf specification.md specification.txt
 
 specification.pdf: specification.tex clean $(IMAGES)
 	rm -f *.aux *.log *.pdf *.fls *.synctex.gz *.fdb_latexmk
-	xelatex -interaction=batchmode -halt-on-error "$<"
-	xelatex -interaction=batchmode -halt-on-error "$<"
+	xelatex -interaction=nonstopmode -halt-on-error "$<"
+	xelatex -interaction=nonstopmode -halt-on-error "$<"
 
 specification.md: specification.tex
 	pandoc -f latex -t gfm -o "$@" "$<"
