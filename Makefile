@@ -10,7 +10,7 @@ IMAGES=\
 	graphics/fill-rectangles.pdf \
 	graphics/draw-line-loop.pdf \
 	graphics/draw-line-strip.pdf \
-	graphics/draw-lines.pdf 
+	graphics/draw-lines.pdf
 
 all: specification.pdf specification.md specification.txt
 
@@ -28,8 +28,8 @@ specification.txt: specification.tex
 %.pdf: %.svg
 	rsvg-convert "$<" -f pdf -o "$@"
 
-%.svg: %.tvgt
-	tvg-text -o "$@" "$<"
+#%.svg: %.tvgt
+#	tvg-text -o "$@" "$<"
 
 clean: 
 	rm -f *.aux *.log *.pdf *.fls *.synctex.gz *.fdb_latexmk
