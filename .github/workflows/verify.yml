@@ -1,0 +1,24 @@
+name: Verification
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
+
+      - name: Install dependencies
+        run: |
+          apt update
+          apt install texlive pandoc
+
+      - name: Render documentation
+        run: make

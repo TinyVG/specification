@@ -1,0 +1,18 @@
+<diagram program="umletino" version="14.4.0-SNAPSHOT"><zoom_level>10</zoom_level><element><id>UMLClass</id><coordinates><x>220</x><y>160</y><w>200</w><h>40</h></coordinates><panel_attributes>valign=center
+lw=1
+Header</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>220</x><y>200</y><w>200</w><h>60</h></coordinates><panel_attributes>valign=center
+lw=1
+Color Table</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>220</x><y>260</y><w>200</w><h>20</h></coordinates><panel_attributes>valign=center
+lw=1
+Command</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>220</x><y>280</y><w>200</w><h>40</h></coordinates><panel_attributes>valign=center
+lw=1
+Command</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>220</x><y>380</y><w>200</w><h>30</h></coordinates><panel_attributes>valign=center
+lw=1
+End Of File</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>220</x><y>350</y><w>200</w><h>30</h></coordinates><panel_attributes>valign=center
+lw=1
+Command</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>220</x><y>160</y><w>200</w><h>250</h></coordinates><panel_attributes>lw=6
+bg=white
+transparency=0
+layer=-1</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>220</x><y>320</y><w>200</w><h>30</h></coordinates><panel_attributes>valign=center
+lw=1
+Command</panel_attributes><additional_attributes></additional_attributes></element></diagram>
