@@ -17,8 +17,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          apt update
-          apt install texlive pandoc
+          sudo apt update
+          sudo apt install texlive texlive-xetex pandoc librsvg2-bin
 
       - name: Render documentation
         run: make
