@@ -6,7 +6,7 @@ This format is meant for debugging/development and is not required to be impleme
 
 ## Structure
 
-````lisp
+```lisp
 (tvg 1
   (<width> <height> <scale> <format> <precision>)
   (
@@ -189,4 +189,4 @@ This format is meant for debugging/development and is not required to be impleme
   )
 )
 
-````
+```
