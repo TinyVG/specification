@@ -131,7 +131,7 @@ lifting small file size over encoding simplicity.
 \subsubsection{Why a new format}\label{why-a-new-format}}
 
 SVG is the status quo widespread vector format. Every program can kinda
-use it and can probably render it right to some extend. The problem is
+use it and can probably render it right to some extent. The problem is
 that SVG is a horribly large specification, it is based on XML and
 provides not only vector graphics, but also a full suite for animation
 and JavaScript scripting. Implementing a new SVG renderer from scratch
@@ -148,11 +148,11 @@ language range.
 
 The use of XML bloats the files by a huge magnitude and doesn't provide
 a efficient encoding, thus a lot of websites and applications ship files
-that are not encoded optimally. Also SVG allows several ways of
-achieving the same thing, and can be seen more as a intermediate format
+that are not encoded optimally. Also, SVG allows several ways of
+achieving the same thing, and can be seen more as an intermediate format
 for editing as for final encoding.
 
-TinyVG was created to adress most of these problems, trying to achieve a
+TinyVG was created to address most of these problems, trying to achieve a
 balance between flexibility and file size, while keeping file size as
 the more important priority.
 
@@ -215,14 +215,14 @@ format uses 16 bytes per color. This means in the worst case, we add a
 single byte to the size of a color that is only used once, but colors
 that are common in the file will be encoded as a single byte per use +
 one time overhead. This encoding scheme was chosen as a vector graphic
-typically doesn't use as much different colors as bitmap graphics and
+typically doesn't use as many different colors as bitmap graphics and
 thus can be encoded more optimally.
 
 \textbf{NOTE:} The following documentation uses a tabular style to
 document structures. All integers are assumed to be encoded in
 little-endian byte order if not specified otherwise. The \emph{Type}
 column of each structure definition uses a Zig notation for types and
-the fields have no padding bits inbetween. If a field does not align to
+the fields have no padding bits in between. If a field does not align to
 a byte boundary, the next field will be offset into the byte by the
 current fields bit offset + bit size. This means, that two consecutive
 fields \textbf{a} (\texttt{u3}) and \textbf{b} (\texttt{u5}) can be
@@ -289,7 +289,7 @@ will have:
 Value & Enumeration & Description \\
 \midrule
 \endhead
-0 & RGBA 8888 & Each color is a 4-tuple (red, green ,blue, alpha) of
+0 & RGBA 8888 & Each color is a 4-tuple (red, green, blue, alpha) of
 bytes with the color channels encoded in sRGB and the alpha as linear
 alpha. \\
 1 & RGB 565 & Each color is encoded as a 3-tuple (red, green, blue) with
@@ -333,7 +333,7 @@ number of bytes low. It is encoded as a variable-sized integer that uses
 
 The integer is still built as a little-endian, so the first byte will
 always encode bits 0\ldots6, the second one encodes 8\ldots13, and so
-on. Bytes are read until the upper-most bit in the byte is set. The bit
+on. Bytes are read until the uppermost bit in the byte is set. The bit
 mappings are done as following:
 
 \begin{longtable}[]{@{}p{1in}p{2in}p{3in}@{}}
@@ -461,7 +461,7 @@ The size of the color table is \texttt{16\ *\ color\_count}.
 \paragraph{Custom}\label{custom}}
 
 The TinyVG specification does not describe the size nor format of this
-kind of color table. A implementation specific format is expected. A
+kind of color table. An implementation specific format is expected. A
 conforming parser is allowed to reject files with this color format as
 "unsupported".
 
@@ -480,7 +480,7 @@ Command Index & Name & Short description \\
 \midrule
 \endhead
 0 & end of document & This command determines the end of file. \\
-1 & fill polygon & This command fills a N-gon. \\
+1 & fill polygon & This command fills an N-gon. \\
 2 & fill rectangles & This command fills a set of rectangles. \\
 3 & fill path & This command fills a free-form path. \\
 4 & draw lines & This command draws a set of lines. \\
@@ -518,7 +518,7 @@ have \texttt{primary\_style\_kind} to be set to 0, so the last byte of
 every TinyVG file is \texttt{0x00}.
 
 Every byte after this command is considered not part of the TinyVG data
-and can be used for other purposes like meta data or similar.
+and can be used for other purposes like metadata or similar.
 
 \hypertarget{fill-polygon}{%
 \paragraph{Fill Polygon}\label{fill-polygon}}
@@ -542,9 +542,9 @@ polygon. \\
 \bottomrule
 \end{longtable}
 
-The offset in \texttt{point\_count} is there due to 0 points don't make
-sense at all and the command could just be skipped instead of encoding
-it with 0 points. The offset is one to allow code sharing between other
+The offset in \texttt{point\_count} is there due to 0 points not making
+any sense at all, and the command could just be skipped instead of encoding
+it with 0 points. The offset is 1 to allow code sharing between other
 fill commands, as each fill command shares the same header.
 
 \texttt{point\_count} must be at least 2, files that encode a lower
@@ -609,13 +609,13 @@ of the polygon. \\
 \bottomrule
 \end{longtable}
 
-The offset in \texttt{rectangle\_count} is there due to 0 rectangles
-don't make sense at all and the command could just be skipped instead of
-encoding it with 0 rectangles. The offset is one to allow code sharing
+The offset in \texttt{rectangle\_count} is there due to 0 rectangles not
+making any sense at all, and the command could just be skipped instead of
+encoding it with 0 rectangles. The offset is 1 to allow code sharing
 between other fill commands, as each fill command shares the same
 header.
 
-The rectangles must be drawn first to last, so in the order they appear
+The rectangles must be drawn first to last, which is the order they appear
 in the file.
 
 \includegraphics{graphics/fill-rectangles.pdf}
@@ -663,7 +663,7 @@ path & \texttt{Path(segment\_count\ +\ 1)} & A path with
 
 The offset in \texttt{segment\_count} is there due to 0 segments don't
 make sense at all and the command could just be skipped instead of
-encoding it with 0 segments. The offset is one to allow code sharing
+encoding it with 0 segments. The offset is 1 to allow code sharing
 between other fill commands, as each fill command shares the same
 header.
 
@@ -803,7 +803,7 @@ outlines.
 \hypertarget{outline-fill-polygon}{%
 \paragraph{Outline Fill Polygon}\label{outline-fill-polygon}}
 
-Fills a polygon and draws a outline at the same time.
+Fills a polygon and draws an outline at the same time.
 
 The command is structured like this:
 
@@ -867,7 +867,7 @@ number of points is 64.
 \hypertarget{outline-fill-path}{%
 \paragraph{Outline Fill Path}\label{outline-fill-path}}
 
-Fills a path and draws a outline at the same time.
+Fills a path and draws an outline at the same time.
 
 The command is structured like this:
 
@@ -1015,15 +1015,15 @@ point. \\
 current point to a new \texttt{x} coordinate. \\
 2 & vertical line & A straight vertical line is drawn from the current
 point to a new \texttt{y} coordiante. \\
-3 & cubic bezier & A cubic bezier curve is drawn from the current point
+3 & cubic bezier & A cubic Bézier curve is drawn from the current point
 to a new point. \\
 4 & arc circle & A circle segment is drawn from current point to a new
 point. \\
 5 & arc ellipse & An ellipse segment is drawn from current point to a
 new point. \\
-6 & close path & The path is closed and a straight line is drawn to the
+6 & close path & The path is closed, and a straight line is drawn to the
 starting point. \\
-7 & quadratic bezier & A quadratic bezier curve is drawn from the
+7 & quadratic bezier & A quadratic Bézier curve is drawn from the
 current point to a new point. \\
 \bottomrule
 \end{longtable}
@@ -1121,9 +1121,9 @@ y & \texttt{Unit} & The new \texttt{y} coordinate. \\
 \end{longtable}
 
 \hypertarget{cubic-bezier}{%
-\paragraph{Cubic Bezier}\label{cubic-bezier}}
+\paragraph{Cubic Bézier}\label{cubic-bezier}}
 
-The cubic bezier instruction draws a bézier curve with two control
+The cubic bezier instruction draws a Bézier curve with two control
 points.
 
 \begin{longtable}[]{@{}p{1in}p{2in}p{3in}@{}}
@@ -1133,7 +1133,7 @@ Field & Type & Description \\
 \endhead
 control\_0 & \texttt{Point} & The first control point. \\
 control\_1 & \texttt{Point} & The second control point. \\
-point\_1 & \texttt{Point} & The end point of the bézier curve. \\
+point\_1 & \texttt{Point} & The end point of the Bézier curve. \\
 \bottomrule
 \end{longtable}
 
@@ -1166,7 +1166,7 @@ target & \texttt{Point} & The end point of the circle segment. \\
 between the current point and \texttt{target} is larger than
 \texttt{radius}, the distance is used as the radius.
 
-When \texttt{large\_arc} is 1, the larger cirle segment is drawn.
+When \texttt{large\_arc} is 1, the larger circle segment is drawn.
 
 If \texttt{sweep} is 1, the circle segment will make a left turn,
 otherwise it will make a right turn. This means that if we go from the
@@ -1205,7 +1205,7 @@ the ellipse. If the distance between the current point and
 points, \texttt{radius\_x} and \texttt{radius\_y} are scaled uniformly
 so that it fits exactly.
 
-When \texttt{large\_arc} is 1, the larger cirle segment is drawn.
+When \texttt{large\_arc} is 1, the larger circle segment is drawn.
 
 If \texttt{sweep} is 1, the ellipse segment will make a left turn,
 otherwise it will make a right turn. This means that if we go from the
@@ -1219,9 +1219,9 @@ A straight line is drawn to the start location of the current segment.
 This instruction doesn't have additional data encoded.
 
 \hypertarget{quadratic-bezier}{%
-\paragraph{Quadratic Bezier}\label{quadratic-bezier}}
+\paragraph{Quadratic Bézier}\label{quadratic-bezier}}
 
-The quadratic bezier instruction draws a bézier curve with a single
+The quadratic Bézier instruction draws a Bézier curve with a single
 control point.
 
 \begin{longtable}[]{@{}p{1in}p{2in}p{3in}@{}}
@@ -1230,7 +1230,7 @@ Field & Type & Description \\
 \midrule
 \endhead
 control & \texttt{Point} & The control point. \\
-point\_1 & \texttt{Point} & The end point of the bézier curve. \\
+point\_1 & \texttt{Point} & The end point of the Bézier curve. \\
 \bottomrule
 \end{longtable}
 
