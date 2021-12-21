@@ -1,6 +1,6 @@
 # TinyVG Specification
 
-TinyVG is a new vector graphis format that tries to be both simpler and smaller than SVG.
+TinyVG is a new vector graphics format that tries to be both simpler and smaller than SVG.
 
 The core features are:
 
