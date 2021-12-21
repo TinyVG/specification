@@ -228,7 +228,7 @@ current fields bit offset + bit size. This means, that two consecutive
 fields \textbf{a} (\texttt{u3}) and \textbf{b} (\texttt{u5}) can be
 extracted from the byte by using
 \texttt{(byte\ \&\ 0x7)\ \textgreater{}\textgreater{}\ 0} for \textbf{a}
-and \texttt{(byte\ \&\ 0x1F)\ \textgreater{}\textgreater{}\ 3} for
+and \texttt{(byte\ \&\ 0xF8)\ \textgreater{}\textgreater{}\ 3} for
 \textbf{b}.
 
 \hypertarget{coordinate-system}{%
