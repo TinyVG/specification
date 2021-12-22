@@ -10,7 +10,8 @@ IMAGES=\
 	graphics/fill-rectangles.pdf \
 	graphics/draw-line-loop.pdf \
 	graphics/draw-line-strip.pdf \
-	graphics/draw-lines.pdf
+	graphics/draw-lines.pdf \
+	design/logo.pdf
 
 all: specification.pdf specification.md specification.txt
 
