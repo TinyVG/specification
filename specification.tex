@@ -116,38 +116,38 @@
 
 \begin{titlepage}
   \begin{center}    
-      \vspace*{1cm}
+    \vspace*{1cm}
 
-      \includegraphics[height=20cm]{design/logo.pdf}
+    \includegraphics[height=20cm]{design/logo.pdf}
 
-      \vspace*{1cm}
-          
-      %\
-      %\textbf{Tiny Vector Graphics}
-          
-      \Huge Specification\\
-      \vspace{0.5cm}
-      \LARGE (Working Draft)
-          
-      \vfill
-          
-      % A thesis presented for the degree of Doctor of Philosophy
+    \vspace*{1cm}
+        
+    %\
+    %\textbf{Tiny Vector Graphics}
+        
+    \Huge Specification\\
+    \vspace{0.5cm}
+    \LARGE (Working Draft)
+        
+    \vfill
+        
+    % A thesis presented for the degree of Doctor of Philosophy
 
-      \begin{abstract}
-      \Large
-      The tiny vector graphics format is a binary file
-      format that encodes a list of vector graphic primitives. It is tailored
-      to have a tiny memory footprint and simple implementations, while
-      lifting small file size over encoding simplicity.
-      \end{abstract}
-          
-      \vspace{0.8cm}
-          
-      %\Large
-      %Department Name\\
-      %University Name\\
-      %Country\\
-      %Date
+    \begin{abstract}
+    \Large
+    The tiny vector graphics format is a binary file
+    format that encodes a list of vector graphic primitives. It is tailored
+    to have a tiny memory footprint and simple implementations, while
+    lifting small file size over encoding simplicity.
+    \end{abstract}
+        
+    \vspace{0.8cm}
+        
+    %\Large
+    %Department Name\\
+    %University Name\\
+    %Country\\
+    %Date
           
   \end{center}
 \end{titlepage}
@@ -227,13 +227,15 @@ the more important priority.
 
 \hypertarget{recognition}{\subsection{Recognizing TinyVG}\label{recognition}}
 
-TinyVG is using the \texttt{.tvg} file extension and should use the \texttt{image/x-tinyvg} mime type.
+TinyVG is using the \texttt{.tvg} file extension and should use the \texttt{image/tinyvg} mime type.
 
 \hypertarget{format}{\subsection{Format}\label{format}}
 
 TinyVG files are roughly structured like this:
 
-\includegraphics{graphics/overview.pdf}
+\begin{center}
+\includegraphics[height=0.35\textwidth]{graphics/overview.pdf}
+\end{center}
 
 Files are made up of a header, followed by a color lookup table and a
 sequence of commands terminated by a \emph{end of file} command.
@@ -265,14 +267,15 @@ and \texttt{(byte\ \&\ 0xF8)\ \textgreater{}\textgreater{}\ 3} for
 \hypertarget{coordinate-system}{%
 \subsubsection{Coordinate system}\label{coordinate-system}}
 
-TinyVG uses the 2-dimensional
-\href{https://en.wikipedia.org/wiki/Cartesian_coordinate_system}{Cartesian
+TinyVG uses the 2-dimensional \href{https://en.wikipedia.org/wiki/Cartesian_coordinate_system}{Cartesian
 coordinate system} with X being the positive horizontal distance to the
 origin and Y being the negative vertical distance to the origin. This
 means that X is going right, while Y is going down, to match the
 coordinate system of several other image formats:
 
-\includegraphics{graphics/coordinates.pdf}
+\begin{center}
+  \includegraphics[width=0.5\textwidth]{graphics/coordinates.pdf}
+\end{center}
 
 \hypertarget{header}{%
 \subsubsection{Header}\label{header}}
@@ -281,31 +284,20 @@ Each TVG file starts with a header defining some global values for the
 file like scale and image size. The header is always at offset 0 in a
 file.
 
-\begin{longtable}[]{@{}p{1in}p{2in}p{3in}@{}}
+\begin{longtable}[]{@{}p{1in}p{1in}p{4in}@{}}
 \toprule
 Field & Type & Description \\
 \midrule
 \endhead
 magic & \texttt{{[}2{]}u8} & Must be \texttt{\{\ 0x72,\ 0x56\ \}} \\
-version & \texttt{u8} & Must be \texttt{1}. For future versions, this
-field might decide how the rest of the format looks like. \\
-scale & \texttt{u4} & Defines the number of fraction bits in a
-\protect\hyperlink{units}{\texttt{Unit}} value. \\
-color\_encoding & \texttt{u2} & Defines the type of color information
-that is used in the \protect\hyperlink{color-table}{color table}. \\
-coordinate\_range & \texttt{u2} & Defines the number of total bits in a
-\protect\hyperlink{units}{\texttt{Unit}} value and thus the overall
-precision of the file. \\
+version & \texttt{u8} & Must be \texttt{1}. For future versions, this field might decide how the rest of the format looks like. \\
+scale & \texttt{u4} & Defines the number of fraction bits in a \protect\hyperlink{units}{\texttt{Unit}} value. \\
+color\_encoding & \texttt{u2} & Defines the type of color information that is used in the \protect\hyperlink{color-table}{color table}. \\
+coordinate\_range & \texttt{u2} & Defines the number of total bits in a \protect\hyperlink{units}{\texttt{Unit}} value and thus the overall precision of the file. \\
 width & \texttt{u8}, \texttt{u16} or \texttt{u32} & Encodes the maximum
-width of the output file in pixels. A value of 0 indicates that the
-image has the maximum possible width. The size of this field depends on
-the coordinate range field. \\
-height & \texttt{u8}, \texttt{u16} or \texttt{u32} & Encodes the maximum
-height of the output file in pixels. A value of 0 indicates that the
-image has the maximum possible height. The size of this field depends on
-the coordinate range field. \\
-color\_count & \texttt{VarUInt} & The number of colors in the
-\protect\hyperlink{color-table}{color table}. \\
+width of the output file in pixels. A value of 0 indicates that the image has the maximum possible width. The size of this field depends on the coordinate range field. \\
+height & \texttt{u8}, \texttt{u16} or \texttt{u32} & Encodes the maximum height of the output file in pixels. A value of 0 indicates that the image has the maximum possible height. The size of this field depends on the coordinate range field. \\
+color\_count & \texttt{VarUInt} & The number of colors in the \protect\hyperlink{color-table}{color table}. \\
 \bottomrule
 \end{longtable}
 
@@ -315,25 +307,15 @@ color\_count & \texttt{VarUInt} & The number of colors in the
 The color encoding defines which format the colors in the color table
 will have:
 
-\begin{longtable}[]{@{}p{1in}p{2in}p{3in}@{}}
+\begin{longtable}[]{@{}p{0.5in}p{1in}p{4.5in}@{}}
 \toprule
 Value & Enumeration & Description \\
 \midrule
 \endhead
-0 & RGBA 8888 & Each color is a 4-tuple (red, green, blue, alpha) of
-bytes with the color channels encoded in sRGB and the alpha as linear
-alpha. \\
-1 & RGB 565 & Each color is encoded as a 3-tuple (red, green, blue) with
-16 bit per color. While red and blue both use 5 bit, the green channel
-uses 6 bit. red uses bit range 0...4, green bits 5...10 and blue bits
-11...15. \\
-2 & RGBA F32 & Each color is a 4-tuple (red, green ,blue, alpha) of
-binary32 IEEE 754 floating point value with the color channels encoded
-in sRGB and the alpha as linear alpha. A color value of \texttt{1.0} is
-full brightness, while a value of \texttt{0.0} is zero brightness. \\
-3 & Custom & The custom color encoding is \emph{defined undefined}. The
-information how these colors are encoded must be implemented via
-external means. \\
+0 & RGBA 8888 & Each color is a 4-tuple (red, green, blue, alpha) of bytes with the color channels encoded in sRGB and the alpha as linear alpha. \\
+1 & RGB 565 & Each color is encoded as a 3-tuple (red, green, blue) with 16 bit per color. While red and blue both use 5 bit, the green channel uses 6 bit. red uses bit range 0...4, green bits 5...10 and blue bits 11...15. \\
+2 & RGBA F32 & Each color is a 4-tuple (red, green ,blue, alpha) of binary32 IEEE 754 floating point value with the color channels encoded in sRGB and the alpha as linear alpha. A color value of \texttt{1.0} is full intensity, while a value of \texttt{0.0} is zero intensity. \\
+3 & Custom & The custom color encoding is \emph{defined undefined}. The information how these colors are encoded must be implemented via external means. \\
 \bottomrule
 \end{longtable}
 
@@ -367,7 +349,7 @@ always encode bits 0\ldots6, the second one encodes 8\ldots13, and so
 on. Bytes are read until the uppermost bit in the byte is set. The bit
 mappings are done as following:
 
-\begin{longtable}[]{@{}p{1in}p{2in}p{3in}@{}}
+\begin{longtable}[]{@{}p{1in}p{1in}p{4in}@{}}
 \toprule
 Byte & Bit Range & Notes \\
 \midrule
@@ -376,8 +358,7 @@ Byte & Bit Range & Notes \\
 \#2 & 7...13 & \\
 \#3 & 14...20 & \\
 \#4 & 21...27 & \\
-\#5 & 28...31 & This byte must always have the uppermost 4 bits set as
-\texttt{0b1000????}. \\
+\#5 & 28...31 & This byte must always have the uppermost 4 bits set as \texttt{0b1000????}. \\
 \bottomrule
 \end{longtable}
 
@@ -429,19 +410,15 @@ three defined color encodings, each will yield a list of
 
 Each color value is encoded as a sequence of four bytes:
 
-\begin{longtable}[]{@{}p{1in}p{2in}p{3in}@{}}
+\begin{longtable}[]{@{}p{0.5in}p{0.5in}p{5.0in}@{}}
 \toprule
 Field & Type & Description \\
 \midrule
 \endhead
-red & \texttt{u8} & Red color channel between 0.0 and 1.0, mapped to
-byte values 0 to 255. \\
-green & \texttt{u8} & Green color channel between 0.0 and 1.0, mapped to
-byte values 0 to 255. \\
-blue & \texttt{u8} & Blue color channel between 0.0 and 1.0, mapped to
-byte values 0 to 255. \\
-alpha & \texttt{u8} & Transparency channel between 0.0 and 1.0, mapped
-to byte values 0 to 255. \\
+red & \texttt{u8} & Red color channel between 0.0 and 1.0, mapped to byte values 0 to 255. \\
+green & \texttt{u8} & Green color channel between 0.0 and 1.0, mapped to byte values 0 to 255. \\
+blue & \texttt{u8} & Blue color channel between 0.0 and 1.0, mapped to byte values 0 to 255. \\
+alpha & \texttt{u8} & Transparency channel between 0.0 and 1.0, mapped to byte values 0 to 255. \\
 \bottomrule
 \end{longtable}
 
@@ -452,17 +429,14 @@ The size of the color table is \texttt{4\ *\ color\_count}.
 
 Each color value is encoded as a sequence of 2 bytes:
 
-\begin{longtable}[]{@{}p{1in}p{2in}p{3in}@{}}
+\begin{longtable}[]{@{}p{0.5in}p{0.5in}p{5.0in}@{}}
 \toprule
 Field & Type & Description \\
 \midrule
 \endhead
-red & \texttt{u5} & Red color channel between 0.0 and 1.0, mapped to
-integer values 0 to 31. \\
-green & \texttt{u6} & Green color channel between 0.0 and 1.0, mapped to
-integer values 0 to 63. \\
-blue & \texttt{u5} & Blue color channel between 0.0 and 1.0, mapped to
-integer values 0 to 31. \\
+red & \texttt{u5} & Red color channel between 0.0 and 1.0, mapped to integer values 0 to 31. \\
+green & \texttt{u6} & Green color channel between 0.0 and 1.0, mapped to integer values 0 to 63. \\
+blue & \texttt{u5} & Blue color channel between 0.0 and 1.0, mapped to integer values 0 to 31. \\
 \bottomrule
 \end{longtable}
 
@@ -474,7 +448,7 @@ colors are fully opaque.
 
 Each color value is encoded as a sequence of 16 bytes:
 
-\begin{longtable}[]{@{}p{1in}p{2in}p{3in}@{}}
+\begin{longtable}[]{@{}p{0.5in}p{0.5in}p{5.0in}@{}}
 \toprule
 Field & Type & Description \\
 \midrule
@@ -505,9 +479,9 @@ new 2D primitive to the graphic.
 
 The following commands are available:
 
-\begin{longtable}[]{@{}p{1in}p{2in}p{3in}@{}}
+\begin{longtable}[]{@{}p{0.5in}p{1.25in}p{4.25in}@{}}
 \toprule
-Command Index & Name & Short description \\
+Index & Name & Short description \\
 \midrule
 \endhead
 0 & end of document & This command determines the end of file. \\
@@ -518,26 +492,21 @@ Command Index & Name & Short description \\
 5 & draw line loop & This command draws the outline of a polygon. \\
 6 & draw line strip & This command draws a list of end-to-end lines. \\
 7 & draw line path & This command draws a free-form path. \\
-8 & outline fill polygon & This command combines the fill and draw
-polygon command into one. \\
-9 & outline fill rectangles & This command combines the fill and draw
-rectangles command into one. \\
-10 & outline fill path & This command combines the fill and draw path
-command into one. \\
+8 & outline fill polygon & This command draws a filled polygon with an outline. \\
+9 & outline fill rectangles & This command draws several filled rectangles with an outline. \\
+10 & outline fill path & This command combines the fill and draw path command into one. \\
 \bottomrule
 \end{longtable}
 
 Each command is encoded as a single byte which is split into fields:
 
-\begin{longtable}[]{@{}p{1in}p{2in}p{3in}@{}}
+\begin{longtable}[]{@{}p{1.5in}p{0.5in}p{4in}@{}}
 \toprule
 Field & Type & Description \\
 \midrule
 \endhead
-command\_index & \texttt{u6} & The command that is encoded next. See
-table above. \\
-primary\_style\_kind & \texttt{u2} & The type of style this command uses
-as a primary style. \\
+command\_index & \texttt{u6} & The command that is encoded next. See table above. \\
+prim\_style\_kind & \texttt{u2} & The type of style this command uses as a primary style. \\
 \bottomrule
 \end{longtable}
 
@@ -545,7 +514,7 @@ as a primary style. \\
 \paragraph{End Of Document}\label{end-of-document}}
 
 If this command is read, the TinyVG file has ended. This command must
-have \texttt{primary\_style\_kind} to be set to 0, so the last byte of
+have \texttt{prim\_style\_kind} to be set to 0, so the last byte of
 every TinyVG file is \texttt{0x00}.
 
 Every byte after this command is considered not part of the TinyVG data
@@ -554,8 +523,7 @@ and can be used for other purposes like metadata or similar.
 \hypertarget{fill-polygon}{%
 \paragraph{Fill Polygon}\label{fill-polygon}}
 
-Fills a \href{https://en.wikipedia.org/wiki/Polygon}{polygon} with N
-points.
+Fills a \href{https://en.wikipedia.org/wiki/Polygon}{polygon} with N points.
 
 The command is structured like this:
 
@@ -566,7 +534,7 @@ Field & Type & Description \\
 \endhead
 point\_count & \protect\hyperlink{varuint}{\texttt{VarUInt}} & The
 number of points in the polygon. This value is offset by 1. \\
-fill\_style & \texttt{Style(primary\_style\_kind)} & The style that is
+fill\_style & \texttt{Style(prim\_style\_kind)} & The style that is
 used to fill the polygon. \\
 polygon & \texttt{{[}point\_count\ +\ 1{]}Point} & The points of the
 polygon. \\
@@ -584,25 +552,23 @@ value must be discarded as "invalid" by a conforming implementation.
 The polygon specified in \texttt{polygon} must be drawn using the
 \href{https://en.wikipedia.org/wiki/Even\%E2\%80\%93odd_rule}{even-odd
 rule}, that means that if for any point to be inside the polygon, a line
-to infinity must cross an even number of polygon segments.
+to infinity must cross an odd number of polygon segments.
 
-
+\begin{center}
 \includegraphics{graphics/fill-polygon.pdf}
+\end{center}
 
-\hypertarget{point}{%
-\subparagraph{\texorpdfstring{\texttt{Point}}{Point}}\label{point}}
+\hypertarget{point}{\subparagraph{\texorpdfstring{\texttt{Point}}{Point}}\label{point}}
 
 Points are a X and Y coordinate pair:
 
-\begin{longtable}[]{@{}p{1in}p{2in}p{3in}@{}}
+\begin{longtable}[]{@{}p{1in}p{1in}p{4in}@{}}
 \toprule
 Field & Type & Description \\
 \midrule
 \endhead
-x & \protect\hyperlink{units}{\texttt{Unit}} & Horizontal distance of
-the point to the origin. \\
-y & \protect\hyperlink{units}{\texttt{Unit}} & Vertical distance of the
-point to the origin. \\
+x & \protect\hyperlink{units}{\texttt{Unit}} & Horizontal distance of the point to the origin. \\
+y & \protect\hyperlink{units}{\texttt{Unit}} & Vertical distance of the point to the origin. \\
 \bottomrule
 \end{longtable}
 
@@ -631,12 +597,9 @@ The command is structured like this:
 Field & Type & Description \\
 \midrule
 \endhead
-rectangle\_count & \protect\hyperlink{varuint}{\texttt{VarUInt}} & The
-number of rectangles. This value is offset by 1. \\
-fill\_style & \texttt{Style(primary\_style\_kind)} & The style that is
-used to fill all rectangles. \\
-rectangles & \texttt{{[}rectangle\_count\ +\ 1{]}Rectangle} & The points
-of the polygon. \\
+rectangle\_count & \protect\hyperlink{varuint}{\texttt{VarUInt}} & The number of rectangles. This value is offset by 1. \\
+fill\_style & \texttt{Style(prim\_style\_kind)} & The style that is used to fill all rectangles. \\
+rectangles & \texttt{{[}rectangle\_count\ +\ 1{]}Rectangle} & The points of the polygon. \\
 \bottomrule
 \end{longtable}
 
@@ -649,7 +612,9 @@ header.
 The rectangles must be drawn first to last, which is the order they appear
 in the file.
 
-\includegraphics{graphics/fill-rectangles.pdf}
+\begin{center}
+  \includegraphics{graphics/fill-rectangles.pdf}
+\end{center}
 
 \hypertarget{rectangle}{%
 \subparagraph{\texorpdfstring{\texttt{Rectangle}}{Rectangle}}\label{rectangle}}
@@ -659,14 +624,10 @@ in the file.
 Field & Type & Description \\
 \midrule
 \endhead
-x & \protect\hyperlink{units}{\texttt{Unit}} & Horizontal distance of
-the left side to the origin. \\
-y & \protect\hyperlink{units}{\texttt{Unit}} & Vertical distance of the
-upper side to the origin. \\
-width & \protect\hyperlink{units}{\texttt{Unit}} & Horizontal extent of
-the rectangle. \\
-height & \protect\hyperlink{units}{\texttt{Unit}} & Vertical extent of
-the rectangle origin. \\
+x & \protect\hyperlink{units}{\texttt{Unit}} & Horizontal distance of the left side to the origin. \\
+y & \protect\hyperlink{units}{\texttt{Unit}} & Vertical distance of the upper side to the origin. \\
+width & \protect\hyperlink{units}{\texttt{Unit}} & Horizontal extent of the rectangle. \\
+height & \protect\hyperlink{units}{\texttt{Unit}} & Vertical extent of the rectangle origin. \\
 \bottomrule
 \end{longtable}
 
@@ -685,7 +646,7 @@ Field & Type & Description \\
 \endhead
 segment\_count & \protect\hyperlink{varuint}{\texttt{VarUInt}} & The
 number of segments in the path. This value is offset by 1. \\
-fill\_style & \texttt{Style(primary\_style\_kind)} & The style that is
+fill\_style & \texttt{Style(prim\_style\_kind)} & The style that is
 used to fill the path. \\
 path & \texttt{Path(segment\_count\ +\ 1)} & A path with
 \texttt{segment\_count} segments \\
@@ -716,7 +677,7 @@ Field & Type & Description \\
 \midrule
 \endhead
 line\_count & \protect\hyperlink{varuint}{\texttt{VarUInt}} & The number of rectangles. This value is offset by 1. \\
-line\_style & \texttt{Style(primary\_style\_kind)} & The style that is used to draw the all rectangles. \\
+line\_style & \texttt{Style(prim\_style\_kind)} & The style that is used to draw the all rectangles. \\
 line\_width & \texttt{f32} & The width of the line. \\
 lines & \texttt{{[}line\_count\ +\ 1{]}Line} & The set of lines. \\
 \bottomrule
@@ -724,8 +685,9 @@ lines & \texttt{{[}line\_count\ +\ 1{]}Line} & The set of lines. \\
 
 Draws \texttt{line\_count} + 1 lines with \texttt{line\_style}. Each line is \texttt{line\_width} units wide, and at least a single display pixel. This means that \texttt{line\_width} of 0 is still visible, even though only marginally. This allows very thin outlines.
 
-
-\includegraphics{graphics/draw-lines.pdf}
+\begin{center}
+  \includegraphics{graphics/draw-lines.pdf}
+\end{center}
 
 \hypertarget{line}{%
 \subparagraph{\texorpdfstring{\texttt{Line}}{Line}}\label{line}}
@@ -754,7 +716,7 @@ Field & Type & Description \\
 \endhead
 point\_count & \protect\hyperlink{varuint}{\texttt{VarUInt}} & The
 number of points. This value is offset by 1. \\
-line\_style & \texttt{Style(primary\_style\_kind)} & The style that is
+line\_style & \texttt{Style(prim\_style\_kind)} & The style that is
 used to draw the all rectangles. \\
 line\_width & \texttt{f32} & The width of the line. \\
 points & \texttt{{[}point\_count\ +\ 1{]}Point} & The points of the
@@ -770,7 +732,9 @@ though only marginally. This allows very thin outlines.
 The lines are drawn between consecutive points as well as the first and
 the last point.
 
+\begin{center}
 \includegraphics{graphics/draw-line-loop.pdf}
+\end{center}
 
 \hypertarget{draw-line-strip}{%
 \paragraph{Draw Line Strip}\label{draw-line-strip}}
@@ -786,7 +750,7 @@ Field & Type & Description \\
 \endhead
 point\_count & \protect\hyperlink{varuint}{\texttt{VarUInt}} & The
 number of points. This value is offset by 1. \\
-line\_style & \texttt{Style(primary\_style\_kind)} & The style that is
+line\_style & \texttt{Style(prim\_style\_kind)} & The style that is
 used to draw the all rectangles. \\
 line\_width & \texttt{f32} & The width of the line. \\
 points & \texttt{{[}point\_count\ +\ 1{]}Point} & The points of the
@@ -801,7 +765,9 @@ though only marginally. This allows very thin outlines.
 
 The lines are drawn between consecutive points, but contrary to \emph{Draw Line Loop}, the first and the last point are not connected.
 
+\begin{center}
 \includegraphics{graphics/draw-line-strip.pdf}
+\end{center}
 
 \hypertarget{draw-line-path}{%
 \paragraph{Draw Line Path}\label{draw-line-path}}
@@ -818,7 +784,7 @@ Field & Type & Description \\
 \endhead
 segment\_count & \protect\hyperlink{varuint}{\texttt{VarUInt}} & The
 number of segments in the path. This value is offset by 1. \\
-line\_style & \texttt{Style(primary\_style\_kind)} & The style that is
+line\_style & \texttt{Style(prim\_style\_kind)} & The style that is
 used to draw the all rectangles. \\
 line\_width & \texttt{f32} & The width of the line. \\
 path & \texttt{Path(segment\_count\ +\ 1)} & A path with
@@ -845,9 +811,9 @@ Field & Type & Description \\
 \endhead
 segment\_count & \texttt{u6} & The number of points in the polygon. This
 value is offset by 1. \\
-secondardy\_style\_kind & \texttt{u2} & The secondary style used in this command. \\
-fill\_style & \texttt{Style(primary\_style\_kind)} & The style that is used to fill the polygon. \\
-line\_style & \texttt{Style(secondardy\_style\_kind)} & The style that is used to draw the outline of the polygon. \\
+sec\_style\_kind & \texttt{u2} & The secondary style used in this command. \\
+fill\_style & \texttt{Style(prim\_style\_kind)} & The style that is used to fill the polygon. \\
+line\_style & \texttt{Style(sec\_style\_kind)} & The style that is used to draw the outline of the polygon. \\
 line\_width & \texttt{f32} & The width of the line. \\
 points & \texttt{{[}segment\_count\ +\ 1{]}Point} & The set of points of this polygon. \\
 \bottomrule
@@ -855,7 +821,9 @@ points & \texttt{{[}segment\_count\ +\ 1{]}Point} & The set of points of this po
 
 This command is a combination of \emph{Fill Polygon} and \emph{Draw Line Loop}. It first performs a \emph{Fill Polygon} with the \texttt{fill\_style}, then performs \emph{Draw Line Loop} with \texttt{line\_style} and \texttt{line\_width}.
 
+\begin{center}
 \includegraphics{graphics/outline-polgon.pdf}
+\end{center}
 
 The outline commands use a reduced number of elements, the maximum
 number of points is 64.
@@ -872,17 +840,12 @@ The command is structured like this:
 Field & Type & Description \\
 \midrule
 \endhead
-rectangle\_count & \texttt{u6} & The number of rectangles. This value is
-offset by 1. \\
-secondardy\_style\_kind & \texttt{u2} & The secondary style used in this
-command. \\
-fill\_style & \texttt{Style(primary\_style\_kind)} & The style that is
-used to fill the polygon. \\
-line\_style & \texttt{Style(secondardy\_style\_kind)} & The style that
-is used to draw the outline of the polygon. \\
+rectangle\_count & \texttt{u6} & The number of rectangles. This value is offset by 1. \\
+sec\_style\_kind & \texttt{u2} & The secondary style used in this command. \\
+fill\_style & \texttt{Style(prim\_style\_kind)} & The style that is used to fill the polygon. \\
+line\_style & \texttt{Style(sec\_style\_kind)} & The style that is used to draw the outline of the polygon. \\
 line\_width & \texttt{f32} & The width of the line. \\
-rectangles & \texttt{{[}rectangle\_count\ +\ 1{]}Rectangle} & The set of
-points of this polygon. \\
+rectangles & \texttt{{[}rectangle\_count+1{]}Rectangle} & The set of points of this polygon. \\
 \bottomrule
 \end{longtable}
 
@@ -890,7 +853,9 @@ For each rectangle, it is first filled, then its outline is drawn, then
 the next rectangle is drawn. This allows to overlap rectangles to look
 like this:
 
+\begin{center}
 \includegraphics{graphics/outline-rectangles.pdf}
+\end{center}
 
 The outline commands use a reduced number of elements, the maximum
 number of points is 64.
@@ -902,22 +867,16 @@ Fills a path and draws an outline at the same time.
 
 The command is structured like this:
 
-\begin{longtable}[]{@{}p{1in}p{2in}p{3in}@{}}
+\begin{longtable}[]{@{}p{1in}p{1.5in}p{3.5in}@{}}
 \toprule
 Field & Type & Description \\
 \midrule
 \endhead
-segment\_count & \texttt{u6} & The number of points in the polygon. This
-value is offset by 1. \\
-secondardy\_style\_kind & \texttt{u2} & The secondary style used in this
-command. \\
-fill\_style & \texttt{Style(primary\_style\_kind)} & The style that is
-used to fill the polygon. \\
-line\_style & \texttt{Style(secondardy\_style\_kind)} & The style that
-is used to draw the outline of the polygon. \\
-line\_width & \texttt{f32} & The width of the line. \\
-path & \texttt{Path(segment\_count\ +\ 1)} & The set of points of this
-polygon. \\
+segment\_count & \texttt{u6} & The number of points in the polygon. This value is offset by 1. \\
+sec\_style\_kind & \texttt{u2} & The secondary style used in this command. \\
+fill\_style & \texttt{Style(prim\_style\_kind)} & The style that is used to fill the polygon. \\
+line\_style & \texttt{Style(sec\_style\_kind)} & The style that is used to draw the outline of the polygon. \\
+line\_width & \texttt{f32} & The width of the line. \\ path & \texttt{Path(segment\_count+1)} & The set of points of this polygon. \\
 \bottomrule
 \end{longtable}
 
@@ -934,7 +893,7 @@ number of points is 64.
 
 There are three types of style available:
 
-\begin{longtable}[]{@{}p{1in}p{2in}p{3in}@{}}
+\begin{longtable}[]{@{}p{0.5in}p{1in}p{4.5in}@{}}
 \toprule
 Value & Style Type & Description \\
 \midrule
@@ -948,12 +907,14 @@ color. \\
 
 Left to right the three gradient types:
 
+\begin{center}
 \includegraphics{graphics/gradients.pdf}
+\end{center}
 
 \hypertarget{flat-colored}{%
 \paragraph{Flat Colored}\label{flat-colored}}
 
-\begin{longtable}[]{@{}p{1in}p{2in}p{3in}@{}}
+\begin{longtable}[]{@{}p{1in}p{1in}p{4in}@{}}
 \toprule
 Field & Type & Description \\
 \midrule
@@ -968,7 +929,7 @@ in the color table.
 \hypertarget{linear-gradient}{%
 \paragraph{Linear Gradient}\label{linear-gradient}}
 
-\begin{longtable}[]{@{}p{1in}p{2in}p{3in}@{}}
+\begin{longtable}[]{@{}p{1in}p{1in}p{4in}@{}}
 \toprule
 Field & Type & Description \\
 \midrule
@@ -995,7 +956,7 @@ closed to \texttt{point\_0} or vice versa for \texttt{point\_1}.
 \hypertarget{radial-gradient}{%
 \paragraph{Radial Gradient}\label{radial-gradient}}
 
-\begin{longtable}[]{@{}p{1in}p{2in}p{3in}@{}}
+\begin{longtable}[]{@{}p{1in}p{1in}p{4in}@{}}
 \toprule
 Field & Type & Description \\
 \midrule
@@ -1035,27 +996,20 @@ our "pen" is the outline of the shape.
 
 The following instructions to move the "pen" are available:
 
-\begin{longtable}[]{@{}p{1in}p{2in}p{3in}@{}}
+\begin{longtable}[]{@{}p{0.5in}p{1.0in}p{4.5in}@{}}
 \toprule
-Instruction Index & Instruction & Short Description \\
+Index & Instruction & Short Description \\
 \midrule
 \endhead
 0 & line & A straight line is drawn from the current point to a new
 point. \\
-1 & horizontal line & A straight horizontal line is drawn from the
-current point to a new \texttt{x} coordinate. \\
-2 & vertical line & A straight vertical line is drawn from the current
-point to a new \texttt{y} coordiante. \\
-3 & cubic bezier & A cubic Bézier curve is drawn from the current point
-to a new point. \\
-4 & arc circle & A circle segment is drawn from current point to a new
-point. \\
-5 & arc ellipse & An ellipse segment is drawn from current point to a
-new point. \\
-6 & close path & The path is closed, and a straight line is drawn to the
-starting point. \\
-7 & quadratic bezier & A quadratic Bézier curve is drawn from the
-current point to a new point. \\
+1 & horizontal line & A straight horizontal line is drawn from the current point to a new \texttt{x} coordinate. \\
+2 & vertical line & A straight vertical line is drawn from the current point to a new \texttt{y} coordiante. \\
+3 & cubic bezier & A cubic Bézier curve is drawn from the current point to a new point. \\
+4 & arc circle & A circle segment is drawn from current point to a new point. \\
+5 & arc ellipse & An ellipse segment is drawn from current point to a new point. \\
+6 & close path & The path is closed, and a straight line is drawn to the starting point. \\
+7 & quadratic bezier & A quadratic Bézier curve is drawn from the current point to a new point. \\
 \bottomrule
 \end{longtable}
 
@@ -1093,16 +1047,14 @@ is chosen:
 
 The tag looks like this:
 
-\begin{longtable}[]{@{}p{1in}p{2in}p{3in}@{}}
+\begin{longtable}[]{@{}p{1in}p{0.5in}p{4.5in}@{}}
 \toprule
 Field & Type & Description \\
 \midrule
 \endhead
-instruction & \texttt{u3} & The instruction kind as listed in the table
-above. \\
+instruction & \texttt{u3} & The instruction kind as listed in the table above. \\
 \emph{padding} & \texttt{u1} & Always 0 \\
-has\_line\_width & \texttt{u1} & If \texttt{1}, a line width is
-present. \\
+has\_line\_width & \texttt{u1} & If \texttt{1}, a line width is present. \\
 \emph{padding} & \texttt{u3} & Always 0 \\
 \bottomrule
 \end{longtable}
@@ -1112,7 +1064,7 @@ present. \\
 
 The line instruction draws a straight line to the \texttt{position}.
 
-\begin{longtable}[]{@{}p{1in}p{2in}p{3in}@{}}
+\begin{longtable}[]{@{}p{1in}p{0.5in}p{4.5in}@{}}
 \toprule
 Field & Type & Description \\
 \midrule
@@ -1127,7 +1079,7 @@ position & \texttt{Point} & The end point of the line. \\
 The horizontal line instruction draws a straight horizontal line to a
 given \texttt{x} coordinate.
 
-\begin{longtable}[]{@{}p{1in}p{2in}p{3in}@{}}
+\begin{longtable}[]{@{}p{1in}p{0.5in}p{4.5in}@{}}
 \toprule
 Field & Type & Description \\
 \midrule
@@ -1142,7 +1094,7 @@ x & \texttt{Unit} & The new \texttt{x} coordinate. \\
 The vertical line instruction draws a straight vertical line to a given
 \texttt{y} coordinate.
 
-\begin{longtable}[]{@{}p{1in}p{2in}p{3in}@{}}
+\begin{longtable}[]{@{}p{1in}p{0.5in}p{4.5in}@{}}
 \toprule
 Field & Type & Description \\
 \midrule
@@ -1157,7 +1109,7 @@ y & \texttt{Unit} & The new \texttt{y} coordinate. \\
 The cubic bezier instruction draws a Bézier curve with two control
 points.
 
-\begin{longtable}[]{@{}p{1in}p{2in}p{3in}@{}}
+\begin{longtable}[]{@{}p{1in}p{0.5in}p{4.5in}@{}}
 \toprule
 Field & Type & Description \\
 \midrule
@@ -1178,15 +1130,13 @@ with \texttt{control\_0} being the first control point and
 Draws a circle segment between the current and the \texttt{target}
 point.
 
-\begin{longtable}[]{@{}p{1in}p{2in}p{3in}@{}}
+\begin{longtable}[]{@{}p{1in}p{0.5in}p{4.5in}@{}}
 \toprule
 Field & Type & Description \\
 \midrule
 \endhead
-large\_arc & \texttt{u1} & If \texttt{1}, the large portion of the
-circle segment is drawn \\
-sweep & \texttt{u1} & Determines if the circle segment is left- or right
-bending. \\
+large\_arc & \texttt{u1} & If \texttt{1}, the large portion of the circle segment is drawn \\
+sweep & \texttt{u1} & Determines if the circle segment is left- or right bending. \\
 \emph{padding} & \texttt{u6} & Always 0. \\
 radius & \texttt{Unit} & The radius of the circle. \\
 target & \texttt{Point} & The end point of the circle segment. \\
@@ -1210,22 +1160,17 @@ is necessary to either the left or the right.
 Draws an ellipse segment between the current and the \texttt{target}
 point.
 
-\begin{longtable}[]{@{}p{1in}p{2in}p{3in}@{}}
+\begin{longtable}[]{@{}p{1in}p{0.5in}p{4.5in}@{}}
 \toprule
 Field & Type & Description \\
 \midrule
 \endhead
-large\_arc & \texttt{u1} & If \texttt{1}, the large portion of the
-ellipse segment is drawn \\
-sweep & \texttt{u1} & Determines if the ellipse segment is left- or
-right bending. \\
+large\_arc & \texttt{u1} & If \texttt{1}, the large portion of the ellipse segment is drawn \\
+sweep & \texttt{u1} & Determines if the ellipse segment is left- or right bending. \\
 \emph{padding} & \texttt{u6} & Always 0. \\
-radius\_x & \texttt{Unit} & The radius of the ellipse in horizontal
-direction. \\
-radius\_y & \texttt{Unit} & The radius of the ellipse in vertical
-direction. \\
-rotation & \texttt{Unit} & The rotation of the ellipse in mathematical
-negative direction, in degrees. \\
+radius\_x & \texttt{Unit} & The radius of the ellipse in horizontal direction. \\
+radius\_y & \texttt{Unit} & The radius of the ellipse in vertical direction. \\
+rotation & \texttt{Unit} & The rotation of the ellipse in mathematical negative direction, in degrees. \\
 target & \texttt{Point} & The end point of ellipse circle segment. \\
 \bottomrule
 \end{longtable}
@@ -1255,7 +1200,7 @@ This instruction doesn't have additional data encoded.
 The quadratic bezier instruction draws a Bézier curve with a single
 control point.
 
-\begin{longtable}[]{@{}p{1in}p{2in}p{3in}@{}}
+\begin{longtable}[]{@{}p{1in}p{0.5in}p{4.5in}@{}}
 \toprule
 Field & Type & Description \\
 \midrule
