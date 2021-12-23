@@ -535,8 +535,8 @@ Field & Type & Description \\
 point\_count & \protect\hyperlink{varuint}{\texttt{VarUInt}} & The
 number of points in the polygon. This value is offset by 1. \\
 fill\_style & \texttt{Style(prim\_style\_kind)} & The style that is
-used to fill the polygon. \\
-polygon & \texttt{{[}point\_count\ +\ 1{]}Point} & The points of the
+used to fill the polygon.\\
+polygon & \texttt{{[}point\_count+1{]}Point} & The points of the
 polygon. \\
 \bottomrule
 \end{longtable}
@@ -599,7 +599,7 @@ Field & Type & Description \\
 \endhead
 rectangle\_count & \protect\hyperlink{varuint}{\texttt{VarUInt}} & The number of rectangles. This value is offset by 1. \\
 fill\_style & \texttt{Style(prim\_style\_kind)} & The style that is used to fill all rectangles. \\
-rectangles & \texttt{{[}rectangle\_count\ +\ 1{]}Rectangle} & The points of the polygon. \\
+rectangles & \texttt{{[}rectangle\_count+1{]}Rectangle} & The points of the polygon. \\
 \bottomrule
 \end{longtable}
 
@@ -678,7 +678,7 @@ Field & Type & Description \\
 \endhead
 line\_count & \protect\hyperlink{varuint}{\texttt{VarUInt}} & The number of rectangles. This value is offset by 1. \\
 line\_style & \texttt{Style(prim\_style\_kind)} & The style that is used to draw the all rectangles. \\
-line\_width & \texttt{f32} & The width of the line. \\
+line\_width & \texttt{Unit} & The width of the line. \\
 lines & \texttt{{[}line\_count\ +\ 1{]}Line} & The set of lines. \\
 \bottomrule
 \end{longtable}
@@ -718,7 +718,7 @@ point\_count & \protect\hyperlink{varuint}{\texttt{VarUInt}} & The
 number of points. This value is offset by 1. \\
 line\_style & \texttt{Style(prim\_style\_kind)} & The style that is
 used to draw the all rectangles. \\
-line\_width & \texttt{f32} & The width of the line. \\
+line\_width & \texttt{Unit} & The width of the line. \\
 points & \texttt{{[}point\_count\ +\ 1{]}Point} & The points of the
 polygon. \\
 \bottomrule
@@ -752,7 +752,7 @@ point\_count & \protect\hyperlink{varuint}{\texttt{VarUInt}} & The
 number of points. This value is offset by 1. \\
 line\_style & \texttt{Style(prim\_style\_kind)} & The style that is
 used to draw the all rectangles. \\
-line\_width & \texttt{f32} & The width of the line. \\
+line\_width & \texttt{Unit} & The width of the line. \\
 points & \texttt{{[}point\_count\ +\ 1{]}Point} & The points of the
 polygon. \\
 \bottomrule
@@ -786,7 +786,7 @@ segment\_count & \protect\hyperlink{varuint}{\texttt{VarUInt}} & The
 number of segments in the path. This value is offset by 1. \\
 line\_style & \texttt{Style(prim\_style\_kind)} & The style that is
 used to draw the all rectangles. \\
-line\_width & \texttt{f32} & The width of the line. \\
+line\_width & \texttt{Unit} & The width of the line. \\
 path & \texttt{Path(segment\_count\ +\ 1)} & A path with
 \texttt{segment\_count} segments \\
 \bottomrule
@@ -814,7 +814,7 @@ value is offset by 1. \\
 sec\_style\_kind & \texttt{u2} & The secondary style used in this command. \\
 fill\_style & \texttt{Style(prim\_style\_kind)} & The style that is used to fill the polygon. \\
 line\_style & \texttt{Style(sec\_style\_kind)} & The style that is used to draw the outline of the polygon. \\
-line\_width & \texttt{f32} & The width of the line. \\
+line\_width & \texttt{Unit} & The width of the line. \\
 points & \texttt{{[}segment\_count\ +\ 1{]}Point} & The set of points of this polygon. \\
 \bottomrule
 \end{longtable}
@@ -835,7 +835,7 @@ Fills and outlines a list of rectangles.
 
 The command is structured like this:
 
-\begin{longtable}[]{@{}p{1in}p{2in}p{3in}@{}}
+\begin{longtable}[]{@{}p{1in}p{2.2in}p{2.8in}@{}}
 \toprule
 Field & Type & Description \\
 \midrule
@@ -844,7 +844,7 @@ rectangle\_count & \texttt{u6} & The number of rectangles. This value is offset 
 sec\_style\_kind & \texttt{u2} & The secondary style used in this command. \\
 fill\_style & \texttt{Style(prim\_style\_kind)} & The style that is used to fill the polygon. \\
 line\_style & \texttt{Style(sec\_style\_kind)} & The style that is used to draw the outline of the polygon. \\
-line\_width & \texttt{f32} & The width of the line. \\
+line\_width & \texttt{Unit} & The width of the line. \\
 rectangles & \texttt{{[}rectangle\_count+1{]}Rectangle} & The set of points of this polygon. \\
 \bottomrule
 \end{longtable}
@@ -867,7 +867,7 @@ Fills a path and draws an outline at the same time.
 
 The command is structured like this:
 
-\begin{longtable}[]{@{}p{1in}p{1.5in}p{3.5in}@{}}
+\begin{longtable}[]{@{}p{1in}p{1.6in}p{3.4in}@{}}
 \toprule
 Field & Type & Description \\
 \midrule
@@ -876,7 +876,7 @@ segment\_count & \texttt{u6} & The number of points in the polygon. This value i
 sec\_style\_kind & \texttt{u2} & The secondary style used in this command. \\
 fill\_style & \texttt{Style(prim\_style\_kind)} & The style that is used to fill the polygon. \\
 line\_style & \texttt{Style(sec\_style\_kind)} & The style that is used to draw the outline of the polygon. \\
-line\_width & \texttt{f32} & The width of the line. \\ path & \texttt{Path(segment\_count+1)} & The set of points of this polygon. \\
+line\_width & \texttt{Unit} & The width of the line. \\ path & \texttt{Path(segment\_count+1)} & The set of points of this polygon. \\
 \bottomrule
 \end{longtable}
 
