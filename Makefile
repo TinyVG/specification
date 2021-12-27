@@ -29,8 +29,8 @@ specification.txt: specification.tex
 %.pdf: %.svg
 	rsvg-convert "$<" -f pdf -o "$@"
 
-#%.svg: %.tvgt
-#	tvg-text -o "$@" "$<"
+%.svg: %.tvgt
+	tvg-text -o "$@" "$<"
 
 clean: 
 	rm -f *.aux *.log *.pdf *.fls *.synctex.gz *.fdb_latexmk

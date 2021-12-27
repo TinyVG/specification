@@ -113,7 +113,6 @@
 
 \begin{document}
 
-
 \begin{titlepage}
   \begin{center}    
     \vspace*{1cm}
@@ -121,18 +120,13 @@
     \includegraphics[height=20cm]{design/logo.pdf}
 
     \vspace*{1cm}
-        
-    %\
-    %\textbf{Tiny Vector Graphics}
-        
+
     \Huge Specification\\
     \vspace{0.5cm}
     \LARGE (Working Draft)
         
     \vfill
         
-    % A thesis presented for the degree of Doctor of Philosophy
-
     \begin{abstract}
     \Large
     The tiny vector graphics format is a binary file
@@ -142,24 +136,12 @@
     \end{abstract}
         
     \vspace{0.8cm}
-        
-    %\Large
-    %Department Name\\
-    %University Name\\
-    %Country\\
-    %Date
-          
   \end{center}
 \end{titlepage}
 
+\hypertarget{introduction}{\subsection{Introduction}\label{introduction}}
 
-
-
-\hypertarget{introduction}{%
-\subsection{Introduction}\label{introduction}}
-
-\hypertarget{why-a-new-format}{%
-\subsubsection{Why a new format}\label{why-a-new-format}}
+\hypertarget{why-a-new-format}{\subsubsection{Why a new format}\label{why-a-new-format}}
 
 SVG is the status quo widespread vector format. Every program can kinda
 use it and can probably render it right to some extent. The problem is
@@ -187,47 +169,36 @@ TinyVG was created to address most of these problems, trying to achieve a
 balance between flexibility and file size, while keeping file size as
 the more important priority.
 
-\hypertarget{features}{%
-\subsubsection{Features}\label{features}}
+\hypertarget{features}{\subsubsection{Features}\label{features}}
 
 \begin{itemize}
 \tightlist
-\item
-  Binary encoding
+\item Binary encoding
 \item
   Support of the most common 2D vector primitives
-
   \begin{itemize}
   \tightlist
-  \item
-    Paths
-  \item
-    Polygons
-  \item
-    Rectangles
-  \item
-    Lines
+  \item Paths
+  \item Polygons
+  \item Rectangles
+  \item Lines
   \end{itemize}
 \item
   3 different fill styles
-
   \begin{itemize}
   \tightlist
-  \item
-    Flat color
-  \item
-    Linear 2-point gradient
-  \item
-    Radial 2-point gradient
+  \item Flat color
+  \item Linear 2-point gradient
+  \item Radial 2-point gradient
   \end{itemize}
-\item
-  Dense encoding, there are near zero padding bits and every byte is
-  used as good as possible.
+\item Dense encoding, there are near zero padding bits and every byte is used as good as possible.
 \end{itemize}
 
 \hypertarget{recognition}{\subsection{Recognizing TinyVG}\label{recognition}}
 
 TinyVG is using the \texttt{.tvg} file extension and should use the \texttt{image/tinyvg} mime type.
+
+The textual representation should use the \texttt{.tvgt} file extension and the \texttt{text/tinyvg} mime type.
 
 \hypertarget{format}{\subsection{Format}\label{format}}
 
@@ -277,8 +248,7 @@ coordinate system of several other image formats:
   \includegraphics[width=0.5\textwidth]{graphics/coordinates.pdf}
 \end{center}
 
-\hypertarget{header}{%
-\subsubsection{Header}\label{header}}
+\hypertarget{header}{\subsubsection{Header}\label{header}}
 
 Each TVG file starts with a header defining some global values for the
 file like scale and image size. The header is always at offset 0 in a
@@ -301,8 +271,7 @@ color\_count & \texttt{VarUInt} & The number of colors in the \protect\hyperlink
 \bottomrule
 \end{longtable}
 
-\hypertarget{color-encoding}{%
-\paragraph{Color Encoding}\label{color-encoding}}
+\hypertarget{color-encoding}{\paragraph{Color Encoding}\label{color-encoding}}
 
 The color encoding defines which format the colors in the color table
 will have:
@@ -319,8 +288,7 @@ Value & Enumeration & Description \\
 \bottomrule
 \end{longtable}
 
-\hypertarget{coordinate-range}{%
-\paragraph{Coordinate Range}\label{coordinate-range}}
+\hypertarget{coordinate-range}{\paragraph{Coordinate Range}\label{coordinate-range}}
 
 The coordinate range defines how many bits a
 \protect\hyperlink{units}{\texttt{Unit}} value uses:
@@ -336,8 +304,7 @@ Value & Enumeration & Description \\
 \bottomrule
 \end{longtable}
 
-\hypertarget{varuint}{%
-\paragraph{\texorpdfstring{\texttt{VarUInt}}{VarUInt}}\label{varuint}}
+\hypertarget{varuint}{\paragraph{\texorpdfstring{\texttt{VarUInt}}{VarUInt}}\label{varuint}}
 
 This type is used to encode 32 bit unsigned integers while keeping the
 number of bytes low. It is encoded as a variable-sized integer that uses
@@ -367,8 +334,7 @@ full range of a 32 bit value. This means we only have 5 bit overhead in
 the worst case, but for all smaller values, we reduce the number of
 bytes for encoding unsigned integers.
 
-\hypertarget{example-code}{%
-\subparagraph{Example Code}\label{example-code}}
+\hypertarget{example-code}{\subparagraph{Example Code}\label{example-code}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -397,16 +363,14 @@ bytes for encoding unsigned integers.
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{color-table}{%
-\subsubsection{Color Table}\label{color-table}}
+\hypertarget{color-table}{\subsubsection{Color Table}\label{color-table}}
 
 The color table encodes the palette for this file. It's binary content
 is defined by the \texttt{color\_encoding} field in the header. For the
 three defined color encodings, each will yield a list of
 \texttt{color\_count} RGBA tuples.
 
-\hypertarget{rgba-8888}{%
-\paragraph{RGBA 8888}\label{rgba-8888}}
+\hypertarget{rgba-8888}{\paragraph{RGBA 8888}\label{rgba-8888}}
 
 Each color value is encoded as a sequence of four bytes:
 
@@ -424,8 +388,7 @@ alpha & \texttt{u8} & Transparency channel between 0.0 and 1.0, mapped to byte v
 
 The size of the color table is \texttt{4\ *\ color\_count}.
 
-\hypertarget{rgb-565}{%
-\paragraph{RGB 565}\label{rgb-565}}
+\hypertarget{rgb-565}{\paragraph{RGB 565}\label{rgb-565}}
 
 Each color value is encoded as a sequence of 2 bytes:
 
@@ -443,8 +406,7 @@ blue & \texttt{u5} & Blue color channel between 0.0 and 1.0, mapped to integer v
 The size of the color table is \texttt{2\ *\ color\_count}, and all
 colors are fully opaque.
 
-\hypertarget{rgba-f32}{%
-\paragraph{RGBA F32}\label{rgba-f32}}
+\hypertarget{rgba-f32}{\paragraph{RGBA F32}\label{rgba-f32}}
 
 Each color value is encoded as a sequence of 16 bytes:
 
@@ -462,16 +424,14 @@ alpha & \texttt{f32} & Transparency channel between 0.0 and 1.0. \\
 
 The size of the color table is \texttt{16\ *\ color\_count}.
 
-\hypertarget{custom}{%
-\paragraph{Custom}\label{custom}}
+\hypertarget{custom}{\paragraph{Custom}\label{custom}}
 
 The TinyVG specification does not describe the size nor format of this
 kind of color table. An implementation specific format is expected. A
 conforming parser is allowed to reject files with this color format as
 "unsupported".
 
-\hypertarget{commands}{%
-\subsubsection{Commands}\label{commands}}
+\hypertarget{commands}{\subsubsection{Commands}\label{commands}}
 
 TinyVG files contain a sequence of draw commands that must be executed
 in the defined order to get the final result. Each draw command adds a
@@ -510,8 +470,7 @@ prim\_style\_kind & \texttt{u2} & The type of style this command uses as a prima
 \bottomrule
 \end{longtable}
 
-\hypertarget{end-of-document}{%
-\paragraph{End Of Document}\label{end-of-document}}
+\hypertarget{end-of-document}{\paragraph{End Of Document}\label{end-of-document}}
 
 If this command is read, the TinyVG file has ended. This command must
 have \texttt{prim\_style\_kind} to be set to 0, so the last byte of
@@ -520,8 +479,7 @@ every TinyVG file is \texttt{0x00}.
 Every byte after this command is considered not part of the TinyVG data
 and can be used for other purposes like metadata or similar.
 
-\hypertarget{fill-polygon}{%
-\paragraph{Fill Polygon}\label{fill-polygon}}
+\hypertarget{fill-polygon}{\paragraph{Fill Polygon}\label{fill-polygon}}
 
 Fills a \href{https://en.wikipedia.org/wiki/Polygon}{polygon} with N points.
 
@@ -572,8 +530,7 @@ y & \protect\hyperlink{units}{\texttt{Unit}} & Vertical distance of the point to
 \bottomrule
 \end{longtable}
 
-\hypertarget{units}{%
-\subparagraph{Units}\label{units}}
+\hypertarget{units}{\subparagraph{Units}\label{units}}
 
 The unit is the common type for both positions and sizes in the vector
 graphic. It is encoded as a signed integer with a configurable amount of
@@ -585,8 +542,7 @@ divided into the final value. For example, with a \emph{reduced} value
 of \texttt{0x13} and a scale of \texttt{4}, we get the final value of
 1.1875, as the number is interpretet as binary \texttt{b0001.0011}.
 
-\hypertarget{fill-rectangles}{%
-\paragraph{Fill Rectangles}\label{fill-rectangles}}
+\hypertarget{fill-rectangles}{\paragraph{Fill Rectangles}\label{fill-rectangles}}
 
 Fills a list of rectangles.
 
@@ -616,8 +572,7 @@ in the file.
   \includegraphics{graphics/fill-rectangles.pdf}
 \end{center}
 
-\hypertarget{rectangle}{%
-\subparagraph{\texorpdfstring{\texttt{Rectangle}}{Rectangle}}\label{rectangle}}
+\hypertarget{rectangle}{\subparagraph{\texorpdfstring{\texttt{Rectangle}}{Rectangle}}\label{rectangle}}
 
 \begin{longtable}[]{@{}p{1in}p{2in}p{3in}@{}}
 \toprule
@@ -631,8 +586,7 @@ height & \protect\hyperlink{units}{\texttt{Unit}} & Vertical extent of the recta
 \bottomrule
 \end{longtable}
 
-\hypertarget{fill-path}{%
-\paragraph{Fill Path}\label{fill-path}}
+\hypertarget{fill-path}{\paragraph{Fill Path}\label{fill-path}}
 
 Fills a \protect\hyperlink{path}{path}. Paths are described further
 below in more detail to keep this section short.
@@ -664,8 +618,7 @@ with even-odd rule) that, when overlap, also perform the even odd rule.
 This allows the user to carve out parts of the path and create
 arbitrarily shaped surfaces.
 
-\hypertarget{draw-lines}{%
-\paragraph{Draw Lines}\label{draw-lines}}
+\hypertarget{draw-lines}{\paragraph{Draw Lines}\label{draw-lines}}
 
 Draws a set of lines.
 
@@ -689,8 +642,7 @@ Draws \texttt{line\_count} + 1 lines with \texttt{line\_style}. Each line is \te
   \includegraphics{graphics/draw-lines.pdf}
 \end{center}
 
-\hypertarget{line}{%
-\subparagraph{\texorpdfstring{\texttt{Line}}{Line}}\label{line}}
+\hypertarget{line}{\subparagraph{\texorpdfstring{\texttt{Line}}{Line}}\label{line}}
 
 \begin{longtable}[]{@{}p{1in}p{2in}p{3in}@{}}
 \toprule
@@ -702,8 +654,7 @@ end & \protect\hyperlink{point}{\texttt{Point}} & End point of the line. \\
 \bottomrule
 \end{longtable}
 
-\hypertarget{draw-line-loop}{%
-\paragraph{Draw Line Loop}\label{draw-line-loop}}
+\hypertarget{draw-line-loop}{\paragraph{Draw Line Loop}\label{draw-line-loop}}
 
 Draws a polygon.
 
@@ -736,8 +687,7 @@ the last point.
 \includegraphics{graphics/draw-line-loop.pdf}
 \end{center}
 
-\hypertarget{draw-line-strip}{%
-\paragraph{Draw Line Strip}\label{draw-line-strip}}
+\hypertarget{draw-line-strip}{\paragraph{Draw Line Strip}\label{draw-line-strip}}
 
 Draws a list of consecutive lines.
 
@@ -769,8 +719,7 @@ The lines are drawn between consecutive points, but contrary to \emph{Draw Line 
 \includegraphics{graphics/draw-line-strip.pdf}
 \end{center}
 
-\hypertarget{draw-line-path}{%
-\paragraph{Draw Line Path}\label{draw-line-path}}
+\hypertarget{draw-line-path}{\paragraph{Draw Line Path}\label{draw-line-path}}
 
 Draws a \protect\hyperlink{path}{path}. Paths are described further
 below in more detail to keep this section short.
@@ -797,8 +746,7 @@ a single display pixel. This means that \texttt{line\_width} of 0 is
 still visible, even though only marginally. This allows very thin
 outlines.
 
-\hypertarget{outline-fill-polygon}{%
-\paragraph{Outline Fill Polygon}\label{outline-fill-polygon}}
+\hypertarget{outline-fill-polygon}{\paragraph{Outline Fill Polygon}\label{outline-fill-polygon}}
 
 Fills a polygon and draws an outline at the same time.
 
@@ -828,8 +776,7 @@ This command is a combination of \emph{Fill Polygon} and \emph{Draw Line Loop}. 
 The outline commands use a reduced number of elements, the maximum
 number of points is 64.
 
-\hypertarget{outline-fill-rectangles}{%
-\paragraph{Outline Fill Rectangles}\label{outline-fill-rectangles}}
+\hypertarget{outline-fill-rectangles}{\paragraph{Outline Fill Rectangles}\label{outline-fill-rectangles}}
 
 Fills and outlines a list of rectangles.
 
@@ -860,8 +807,7 @@ like this:
 The outline commands use a reduced number of elements, the maximum
 number of points is 64.
 
-\hypertarget{outline-fill-path}{%
-\paragraph{Outline Fill Path}\label{outline-fill-path}}
+\hypertarget{outline-fill-path}{\paragraph{Outline Fill Path}\label{outline-fill-path}}
 
 Fills a path and draws an outline at the same time.
 
@@ -888,8 +834,7 @@ performs \emph{Draw Path} with \texttt{line\_style} and
 The outline commands use a reduced number of elements, the maximum
 number of points is 64.
 
-\hypertarget{stylestyle_type}{%
-\subsubsection{\texorpdfstring{\texttt{Style(style\_type)}}{Style(style\_type)}}\label{stylestyle_type}}
+\hypertarget{stylestyle_type}{\subsubsection{\texorpdfstring{\texttt{Style(style\_type)}}{Style(style\_type)}}\label{stylestyle_type}}
 
 There are three types of style available:
 
@@ -911,8 +856,7 @@ Left to right the three gradient types:
 \includegraphics{graphics/gradients.pdf}
 \end{center}
 
-\hypertarget{flat-colored}{%
-\paragraph{Flat Colored}\label{flat-colored}}
+\hypertarget{flat-colored}{\paragraph{Flat Colored}\label{flat-colored}}
 
 \begin{longtable}[]{@{}p{1in}p{1in}p{4in}@{}}
 \toprule
@@ -926,8 +870,7 @@ color\_index & \texttt{VarUInt} & The index into the color table \\
 The shape is uniformly colored with the color at \texttt{color\_index}
 in the color table.
 
-\hypertarget{linear-gradient}{%
-\paragraph{Linear Gradient}\label{linear-gradient}}
+\hypertarget{linear-gradient}{\paragraph{Linear Gradient}\label{linear-gradient}}
 
 \begin{longtable}[]{@{}p{1in}p{1in}p{4in}@{}}
 \toprule
@@ -953,8 +896,7 @@ and the color at that point is sampled. Points that are not projectable
 onto the line have either the color at \texttt{point\_0} if they are
 closed to \texttt{point\_0} or vice versa for \texttt{point\_1}.
 
-\hypertarget{radial-gradient}{%
-\paragraph{Radial Gradient}\label{radial-gradient}}
+\hypertarget{radial-gradient}{\paragraph{Radial Gradient}\label{radial-gradient}}
 
 \begin{longtable}[]{@{}p{1in}p{1in}p{4in}@{}}
 \toprule
@@ -982,8 +924,7 @@ done based on the distance to the center and the radius. If the point is
 not in the circle itself, the color at \texttt{color\_index\_1} is
 always taken.
 
-\hypertarget{pathsegment_count}{%
-\subsubsection{\texorpdfstring{\texttt{Path(segment\_count)}}{Path(segment\_count)}}\label{pathsegment_count}}
+\hypertarget{pathsegment_count}{\subsubsection{\texorpdfstring{\texttt{Path(segment\_count)}}{Path(segment\_count)}}\label{pathsegment_count}}
 
 Paths describe instructions to create complex 2D graphics.
 
@@ -1059,8 +1000,7 @@ has\_line\_width & \texttt{u1} & If \texttt{1}, a line width is present. \\
 \bottomrule
 \end{longtable}
 
-\hypertarget{line-1}{%
-\paragraph{Line}\label{line-1}}
+\hypertarget{line-1}{\paragraph{Line}\label{line-1}}
 
 The line instruction draws a straight line to the \texttt{position}.
 
@@ -1073,8 +1013,7 @@ position & \texttt{Point} & The end point of the line. \\
 \bottomrule
 \end{longtable}
 
-\hypertarget{horizontal-line}{%
-\paragraph{Horizontal Line}\label{horizontal-line}}
+\hypertarget{horizontal-line}{\paragraph{Horizontal Line}\label{horizontal-line}}
 
 The horizontal line instruction draws a straight horizontal line to a
 given \texttt{x} coordinate.
@@ -1088,8 +1027,7 @@ x & \texttt{Unit} & The new \texttt{x} coordinate. \\
 \bottomrule
 \end{longtable}
 
-\hypertarget{vertical-line}{%
-\paragraph{Vertical Line}\label{vertical-line}}
+\hypertarget{vertical-line}{\paragraph{Vertical Line}\label{vertical-line}}
 
 The vertical line instruction draws a straight vertical line to a given
 \texttt{y} coordinate.
@@ -1124,8 +1062,7 @@ The curve is drawn between the current location and \texttt{point\_1}
 with \texttt{control\_0} being the first control point and
 \texttt{control\_1} being the second one.
 
-\hypertarget{arc-circle}{%
-\paragraph{Arc Circle}\label{arc-circle}}
+\hypertarget{arc-circle}{\paragraph{Arc Circle}\label{arc-circle}}
 
 Draws a circle segment between the current and the \texttt{target}
 point.
@@ -1154,8 +1091,7 @@ otherwise it will make a right turn. This means that if we go from the
 current point to \texttt{target}, a rotation to the movement direction
 is necessary to either the left or the right.
 
-\hypertarget{arc-ellipse}{%
-\paragraph{Arc Ellipse}\label{arc-ellipse}}
+\hypertarget{arc-ellipse}{\paragraph{Arc Ellipse}\label{arc-ellipse}}
 
 Draws an ellipse segment between the current and the \texttt{target}
 point.
@@ -1188,8 +1124,7 @@ otherwise it will make a right turn. This means that if we go from the
 current point to \texttt{target}, a rotation to the movement direction
 is necessary to either the left or the right.
 
-\hypertarget{close-path}{%
-\paragraph{Close Path}\label{close-path}}
+\hypertarget{close-path}{\paragraph{Close Path}\label{close-path}}
 
 A straight line is drawn to the start location of the current segment.
 This instruction doesn't have additional data encoded.
@@ -1221,8 +1156,7 @@ with \texttt{control} being the control point.
 
 \begin{itemize}
 \tightlist
-\item
-  Initial release
+\item Initial release
 \end{itemize}
 
 \end{document}
