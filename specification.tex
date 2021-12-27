@@ -111,6 +111,21 @@
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
 
+%
+% ↑ 
+% stuff above this was defined by pandoc
+% stuff below this was changed by humans 
+% ↓
+%
+
+\usepackage{listings}
+
+\usepackage{courier}
+
+\lstset{basicstyle=\footnotesize\ttfamily}
+
+\newcommand{\link}[2]{\hyperlink{#1}{\emph{#2}}}
+
 \begin{document}
 
 \begin{titlepage}
@@ -200,6 +215,24 @@ TinyVG is using the \texttt{.tvg} file extension and should use the \texttt{imag
 
 The textual representation should use the \texttt{.tvgt} file extension and the \texttt{text/tinyvg} mime type.
 
+\hypertarget{display-units}{\section{Display Units}\label{display-units}}
+
+Contrary to pixel graphics, vector graphics don't have a inherent unit system. While pixels in a bitmap map 1:1 to pixels on a screen, a vector graphic unit does not have this requirement.
+
+TinyVG uses an abstract unit called \emph{display unit} which is defined to be a 1/96th of an inch. This matches the CSS pixel definition so a TinyVG graphic with 48x48 display units will match a typical 48x48 bitmap. 
+
+\hypertarget{coordinate-system}{\section{Coordinate system}\label{coordinate-system}}
+
+TinyVG uses the 2-dimensional \href{https://en.wikipedia.org/wiki/Cartesian_coordinate_system}{Cartesian
+coordinate system} with X being the positive horizontal distance to the
+origin and Y being the negative vertical distance to the origin. This
+means that X is going right, while Y is going down, to match the
+coordinate system of several other image formats:
+
+\begin{center}
+  \includegraphics[width=0.5\textwidth]{graphics/coordinates.pdf}
+\end{center}
+
 \hypertarget{binary-encoding}{\section{Binary Encoding}\label{binary-encoding}}
 
 TinyVG files are roughly structured like this:
@@ -222,7 +255,9 @@ one time overhead. This encoding scheme was chosen as a vector graphic
 typically doesn't use as many different colors as bitmap graphics and
 thus can be encoded more optimally.
 
-\subsubsection{NOTES}
+
+\hypertarget{binary-notes}{\subsection{Notes}\label{binary-notes}}
+
 \begin{itemize}
 \item The following documentation uses a tabular style to document structures.
 \item All integers are assumed to be encoded in little-endian byte order if not specified otherwise. 
@@ -232,21 +267,9 @@ thus can be encoded more optimally.
       fields \textbf{a} (\texttt{u3}) and \textbf{b} (\texttt{u5}) can be extracted from the byte by using
       \texttt{(byte\ \&\ 0x7)\ \textgreater{}\textgreater{}\ 0} for \textbf{a} and \texttt{(byte\ \&\ 0xF8)\ \textgreater{}\textgreater{}\ 3}
       for \textbf{b}.
-\item  If not specified otherwise, all coordinates in TinyVG are absolute coordinates, including path nodes and gradients.
+\item If not specified otherwise, all coordinates in TinyVG are absolute coordinates, including path nodes and gradients.
+\item A lot of encoded integers are encoded off-by-one, thus mapping 0 to 1, 1 to 2 and so on. This is done as encoding these integers as 0 would be equivalent to removing the element from the file. Thus, this can be used to encode some more elements with less bytes. If this is the case, this is signaled by the use of \texttt{\textit{value}+1}.
 \end{itemize}
-
-\hypertarget{coordinate-system}{%
-\subsection{Coordinate system}\label{coordinate-system}}
-
-TinyVG uses the 2-dimensional \href{https://en.wikipedia.org/wiki/Cartesian_coordinate_system}{Cartesian
-coordinate system} with X being the positive horizontal distance to the
-origin and Y being the negative vertical distance to the origin. This
-means that X is going right, while Y is going down, to match the
-coordinate system of several other image formats:
-
-\begin{center}
-  \includegraphics[width=0.5\textwidth]{graphics/coordinates.pdf}
-\end{center}
 
 \hypertarget{header}{\subsection{Header}\label{header}}
 
@@ -261,13 +284,12 @@ Field & Type & Description \\
 \endhead
 magic & \texttt{{[}2{]}u8} & Must be \texttt{\{\ 0x72,\ 0x56\ \}} \\
 version & \texttt{u8} & Must be \texttt{1}. For future versions, this field might decide how the rest of the format looks like. \\
-scale & \texttt{u4} & Defines the number of fraction bits in a \protect\hyperlink{units}{\texttt{Unit}} value. \\
-color\_encoding & \texttt{u2} & Defines the type of color information that is used in the \protect\hyperlink{color-table}{color table}. \\
-coordinate\_range & \texttt{u2} & Defines the number of total bits in a \protect\hyperlink{units}{\texttt{Unit}} value and thus the overall precision of the file. \\
-width & \texttt{u8}, \texttt{u16} or \texttt{u32} & Encodes the maximum
-width of the output file in pixels. A value of 0 indicates that the image has the maximum possible width. The size of this field depends on the coordinate range field. \\
-height & \texttt{u8}, \texttt{u16} or \texttt{u32} & Encodes the maximum height of the output file in pixels. A value of 0 indicates that the image has the maximum possible height. The size of this field depends on the coordinate range field. \\
-color\_count & \texttt{VarUInt} & The number of colors in the \protect\hyperlink{color-table}{color table}. \\
+scale & \texttt{u4} & Defines the number of fraction bits in a \link{units}{\texttt{Unit}} value. \\
+color\_encoding & \texttt{u2} & Defines the type of color information that is used in the \link{color-table}{color table}. \\
+coordinate\_range & \texttt{u2} & Defines the number of total bits in a \link{units}{\texttt{Unit}} value and thus the overall precision of the file. \\
+width & \texttt{u8}, \texttt{u16} or \texttt{u32} & Encodes the maximum width of the output file in \link{display-units}{display units}. A value of 0 indicates that the image has the maximum possible width. The size of this field depends on the coordinate range field. \\
+height & \texttt{u8}, \texttt{u16} or \texttt{u32} & Encodes the maximum height of the output file in \link{display-units}{display units}. A value of 0 indicates that the image has the maximum possible height. The size of this field depends on the coordinate range field. \\
+color\_count & \texttt{VarUInt} & The number of colors in the \link{color-table}{color table}. \\
 \bottomrule
 \end{longtable}
 
@@ -291,7 +313,7 @@ Value & Enumeration & Description \\
 \hypertarget{coordinate-range}{\subsubsection{Coordinate Range}\label{coordinate-range}}
 
 The coordinate range defines how many bits a
-\protect\hyperlink{units}{\texttt{Unit}} value uses:
+\link{units}{\texttt{Unit}} value uses:
 
 \begin{longtable}[]{@{}p{1in}p{2in}p{3in}@{}}
 \toprule
@@ -313,19 +335,19 @@ number of bytes low. It is encoded as a variable-sized integer that uses
 
 The integer is still built as a little-endian, so the first byte will
 always encode bits 0\ldots6, the second one encodes 8\ldots13, and so
-on. Bytes are read until the uppermost bit in the byte is set. The bit
+on. Bytes are read until the uppermost bit in the byte is not set. The bit
 mappings are done as following:
 
-\begin{longtable}[]{@{}p{1in}p{1in}p{4in}@{}}
+\begin{longtable}[]{@{}p{0.5in}p{0.75in}p{4.75in}@{}}
 \toprule
 Byte & Bit Range & Notes \\
 \midrule
 \endhead
-\#1 & 0...6 & This byte must always be present. \\
-\#2 & 7...13 & \\
-\#3 & 14...20 & \\
-\#4 & 21...27 & \\
-\#5 & 28...31 & This byte must always have the uppermost 4 bits set as \texttt{0b1000????}. \\
+\#1 & 0\ldots6 & This byte must always be present. \\
+\#2 & 7\ldots13 & \\
+\#3 & 14\ldots20 & \\
+\#4 & 21\ldots27 & \\
+\#5 & 28\ldots31 & This byte must always have the uppermost 4 bits set as \texttt{0b0000????}. \\
 \bottomrule
 \end{longtable}
 
@@ -333,6 +355,29 @@ So a \texttt{VarUInt} always has between 1 and 5 bytes while mapping the
 full range of a 32 bit value. This means we only have 5 bit overhead in
 the worst case, but for all smaller values, we reduce the number of
 bytes for encoding unsigned integers.
+
+\paragraph{Encoding Examples}
+
+The following table contains some examples on how a \texttt{VarUInt} is encoded as a byte sequence. The byte sequence is written in hexadecimal to allow uniform notation.
+
+\begin{longtable}[]{@{}p{1in}p{5in}@{}}
+\toprule
+Integer Value & Byte Sequence \\
+\midrule
+\endhead
+         0 & \texttt{00} \\
+       100 & \texttt{64} \\
+       127 & \texttt{7F} \\
+       128 & \texttt{80 01} \\
+     16383 & \texttt{8F 7F} \\
+     16384 & \texttt{80 80 01} \\
+   1048576 & \texttt{80 80 40} \\
+   2097151 & \texttt{FF FF 7F} \\
+   2097152 & \texttt{80 80 80 01} \\
+2147483648 & \texttt{80 80 80 80 08} \\
+4294967295 & \texttt{FF FF FF FF 0F } \\
+\bottomrule
+\end{longtable}
 
 \hypertarget{example-code}{\subparagraph{Example Code}\label{example-code}}
 
@@ -460,7 +505,7 @@ Index & Name & Short description \\
 7 & draw line path & This command draws a free-form path. \\
 8 & outline fill polygon & This command draws a filled polygon with an outline. \\
 9 & outline fill rectangles & This command draws several filled rectangles with an outline. \\
-10 & outline fill path & This command combines the fill and draw path command into one. \\
+10 & outline fill path & This command combines the fill and draw line path command into one. \\
 \bottomrule
 \end{longtable}
 
@@ -471,7 +516,7 @@ Each command is encoded as a single byte which is split into fields:
 Field & Type & Description \\
 \midrule
 \endhead
-command\_index & \texttt{u6} & The command that is encoded next. See table above. \\
+command\_index    & \texttt{u6} & The command that is encoded next. See table above. \\
 prim\_style\_kind & \texttt{u2} & The type of style this command uses as a primary style. \\
 \bottomrule
 \end{longtable}
@@ -496,12 +541,9 @@ The command is structured like this:
 Field & Type & Description \\
 \midrule
 \endhead
-point\_count & \protect\hyperlink{varuint}{\texttt{VarUInt}} & The
-number of points in the polygon. This value is offset by 1. \\
-fill\_style & \texttt{Style(prim\_style\_kind)} & The style that is
-used to fill the polygon.\\
-polygon & \texttt{{[}point\_count+1{]}Point} & The points of the
-polygon. \\
+point\_count & \link{varuint}{\texttt{VarUInt}}   & The number of points in the polygon. This value is offset by 1. \\
+fill\_style  & \texttt{Style(prim\_style\_kind)}  & The style that is used to fill the polygon.\\
+polygon      & \texttt{{[}point\_count+1{]}Point} & The points of the polygon. \\
 \bottomrule
 \end{longtable}
 
@@ -531,8 +573,8 @@ Points are a X and Y coordinate pair:
 Field & Type & Description \\
 \midrule
 \endhead
-x & \protect\hyperlink{units}{\texttt{Unit}} & Horizontal distance of the point to the origin. \\
-y & \protect\hyperlink{units}{\texttt{Unit}} & Vertical distance of the point to the origin. \\
+x & \link{units}{\texttt{Unit}} & Horizontal distance of the point to the origin. \\
+y & \link{units}{\texttt{Unit}} & Vertical distance of the point to the origin. \\
 \bottomrule
 \end{longtable}
 
@@ -540,7 +582,7 @@ y & \protect\hyperlink{units}{\texttt{Unit}} & Vertical distance of the point to
 
 The unit is the common type for both positions and sizes in the vector
 graphic. It is encoded as a signed integer with a configurable amount of
-bits (see \protect\hyperlink{coordinate-range}{Coordinate Range}) and
+bits (see \link{coordinate-range}{Coordinate Range}) and
 fractional bits.
 
 The file header defines a \emph{scale} by which each signed integer is
@@ -559,9 +601,9 @@ The command is structured like this:
 Field & Type & Description \\
 \midrule
 \endhead
-rectangle\_count & \protect\hyperlink{varuint}{\texttt{VarUInt}} & The number of rectangles. This value is offset by 1. \\
-fill\_style & \texttt{Style(prim\_style\_kind)} & The style that is used to fill all rectangles. \\
-rectangles & \texttt{{[}rectangle\_count+1{]}Rectangle} & The points of the polygon. \\
+rectangle\_count & \link{varuint}{\texttt{VarUInt}}           & The number of rectangles. This value is offset by 1. \\
+fill\_style      & \texttt{Style(prim\_style\_kind)}          & The style that is used to fill all rectangles. \\
+rectangles       & \texttt{{[}rectangle\_count+1{]}Rectangle} & The list of rectangles to be filled. \\
 \bottomrule
 \end{longtable}
 
@@ -585,16 +627,16 @@ in the file.
 Field & Type & Description \\
 \midrule
 \endhead
-x & \protect\hyperlink{units}{\texttt{Unit}} & Horizontal distance of the left side to the origin. \\
-y & \protect\hyperlink{units}{\texttt{Unit}} & Vertical distance of the upper side to the origin. \\
-width & \protect\hyperlink{units}{\texttt{Unit}} & Horizontal extent of the rectangle. \\
-height & \protect\hyperlink{units}{\texttt{Unit}} & Vertical extent of the rectangle origin. \\
+x      & \link{units}{\texttt{Unit}} & Horizontal distance of the left side to the origin. \\
+y      & \link{units}{\texttt{Unit}} & Vertical distance of the upper side to the origin. \\
+width  & \link{units}{\texttt{Unit}} & Horizontal extent of the rectangle. \\
+height & \link{units}{\texttt{Unit}} & Vertical extent of the rectangle origin. \\
 \bottomrule
 \end{longtable}
 
 \hypertarget{fill-path}{\subsubsection{Fill Path}\label{fill-path}}
 
-Fills a \protect\hyperlink{path}{path}. Paths are described further
+Fills a \link{path}{path}. Paths are described further
 below in more detail to keep this section short.
 
 The command is structured like this:
@@ -604,12 +646,9 @@ The command is structured like this:
 Field & Type & Description \\
 \midrule
 \endhead
-segment\_count & \protect\hyperlink{varuint}{\texttt{VarUInt}} & The
-number of segments in the path. This value is offset by 1. \\
-fill\_style & \texttt{Style(prim\_style\_kind)} & The style that is
-used to fill the path. \\
-path & \texttt{Path(segment\_count\ +\ 1)} & A path with
-\texttt{segment\_count} segments \\
+segment\_count & \link{varuint}{\texttt{VarUInt}}  & The number of segments in the path. This value is offset by 1. \\
+fill\_style    & \texttt{Style(prim\_style\_kind)} & The style that is used to fill the path. \\
+path           & \texttt{Path(segment\_count+1)}   & A path with \texttt{segment\_count} segments \\
 \bottomrule
 \end{longtable}
 
@@ -635,10 +674,10 @@ The command is structured like this:
 Field & Type & Description \\
 \midrule
 \endhead
-line\_count & \protect\hyperlink{varuint}{\texttt{VarUInt}} & The number of rectangles. This value is offset by 1. \\
-line\_style & \texttt{Style(prim\_style\_kind)} & The style that is used to draw the all rectangles. \\
-line\_width & \texttt{Unit} & The width of the line. \\
-lines & \texttt{{[}line\_count\ +\ 1{]}Line} & The set of lines. \\
+line\_count & \link{varuint}{\texttt{VarUInt}}     & The number of rectangles. This value is offset by 1. \\
+line\_style & \texttt{Style(prim\_style\_kind)}    & The style that is used to draw the all rectangles. \\
+line\_width & \texttt{Unit}                        & The width of the line. \\
+lines       & \texttt{{[}line\_count\ +\ 1{]}Line} & The list of lines. \\
 \bottomrule
 \end{longtable}
 
@@ -655,8 +694,8 @@ Draws \texttt{line\_count} + 1 lines with \texttt{line\_style}. Each line is \te
 Field & Type & Description \\
 \midrule
 \endhead
-start & \protect\hyperlink{point}{\texttt{Point}} & Start point of the line \\
-end & \protect\hyperlink{point}{\texttt{Point}} & End point of the line. \\
+start & \link{point}{\texttt{Point}} & Start point of the line \\
+end   & \link{point}{\texttt{Point}} & End point of the line. \\
 \bottomrule
 \end{longtable}
 
@@ -671,20 +710,15 @@ The command is structured like this:
 Field & Type & Description \\
 \midrule
 \endhead
-point\_count & \protect\hyperlink{varuint}{\texttt{VarUInt}} & The
-number of points. This value is offset by 1. \\
-line\_style & \texttt{Style(prim\_style\_kind)} & The style that is
-used to draw the all rectangles. \\
-line\_width & \texttt{Unit} & The width of the line. \\
-points & \texttt{{[}point\_count\ +\ 1{]}Point} & The points of the
-polygon. \\
+point\_count & \link{varuint}{\texttt{VarUInt}}       & The number of points. This value is offset by 1. \\
+line\_style  & \texttt{Style(prim\_style\_kind)}      & The style that is used to draw the all rectangles. \\
+line\_width  & \texttt{Unit}                          & The width of the line. \\
+points       & \texttt{{[}point\_count\ +\ 1{]}Point} & The points of the polygon. \\
 \bottomrule
 \end{longtable}
 
 Draws \texttt{point\_count} + 1 lines with \texttt{line\_style}. Each
-line is \texttt{line\_width} units wide, and at least a single display
-pixel. This means that \texttt{line\_width} of 0 is still visible, even
-though only marginally. This allows very thin outlines.
+line is \texttt{line\_width} units wide.
 
 The lines are drawn between consecutive points as well as the first and
 the last point.
@@ -704,20 +738,14 @@ The command is structured like this:
 Field & Type & Description \\
 \midrule
 \endhead
-point\_count & \protect\hyperlink{varuint}{\texttt{VarUInt}} & The
-number of points. This value is offset by 1. \\
-line\_style & \texttt{Style(prim\_style\_kind)} & The style that is
-used to draw the all rectangles. \\
-line\_width & \texttt{Unit} & The width of the line. \\
-points & \texttt{{[}point\_count\ +\ 1{]}Point} & The points of the
-polygon. \\
+point\_count & \link{varuint}{\texttt{VarUInt}}       & The number of points. This value is offset by 1. \\
+line\_style  & \texttt{Style(prim\_style\_kind)}      & The style that is used to draw the all rectangles. \\
+line\_width  & \texttt{Unit}                          & The width of the line. \\
+points       & \texttt{{[}point\_count\ +\ 1{]}Point} & The points of the line strip. \\
 \bottomrule
 \end{longtable}
 
-Draws \texttt{point\_count} + 1 lines with \texttt{line\_style}. Each
-line is \texttt{line\_width} units wide, and at least a single display
-pixel. This means that \texttt{line\_width} of 0 is still visible, even
-though only marginally. This allows very thin outlines.
+Draws \texttt{point\_count} + 1 lines with \texttt{line\_style}. 
 
 The lines are drawn between consecutive points, but contrary to \emph{Draw Line Loop}, the first and the last point are not connected.
 
@@ -727,7 +755,7 @@ The lines are drawn between consecutive points, but contrary to \emph{Draw Line 
 
 \hypertarget{draw-line-path}{\subsubsection{Draw Line Path}\label{draw-line-path}}
 
-Draws a \protect\hyperlink{path}{path}. Paths are described further
+Draws a \link{path}{path}. Paths are described further
 below in more detail to keep this section short.
 
 The command is structured like this:
@@ -737,20 +765,14 @@ The command is structured like this:
 Field & Type & Description \\
 \midrule
 \endhead
-segment\_count & \protect\hyperlink{varuint}{\texttt{VarUInt}} & The
-number of segments in the path. This value is offset by 1. \\
-line\_style & \texttt{Style(prim\_style\_kind)} & The style that is
-used to draw the all rectangles. \\
-line\_width & \texttt{Unit} & The width of the line. \\
-path & \texttt{Path(segment\_count\ +\ 1)} & A path with
-\texttt{segment\_count} segments \\
+segment\_count & \link{varuint}{\texttt{VarUInt}}    & The number of segments in the path. This value is offset by 1. \\
+line\_style    & \texttt{Style(prim\_style\_kind)}   & The style that is used to draw the all rectangles. \\
+line\_width    & \texttt{Unit}                       & The width of the line. \\
+path           & \texttt{Path(segment\_count\ +\ 1)} & A path with \texttt{segment\_count} segments. \\
 \bottomrule
 \end{longtable}
 
-The outline of the path is \texttt{line\_width} units wide, and at least
-a single display pixel. This means that \texttt{line\_width} of 0 is
-still visible, even though only marginally. This allows very thin
-outlines.
+The outline of the path is \texttt{line\_width} units wide.
 
 \hypertarget{outline-fill-polygon}{\subsubsection{Outline Fill Polygon}\label{outline-fill-polygon}}
 
@@ -763,13 +785,12 @@ The command is structured like this:
 Field & Type & Description \\
 \midrule
 \endhead
-segment\_count & \texttt{u6} & The number of points in the polygon. This
-value is offset by 1. \\
-sec\_style\_kind & \texttt{u2} & The secondary style used in this command. \\
-fill\_style & \texttt{Style(prim\_style\_kind)} & The style that is used to fill the polygon. \\
-line\_style & \texttt{Style(sec\_style\_kind)} & The style that is used to draw the outline of the polygon. \\
-line\_width & \texttt{Unit} & The width of the line. \\
-points & \texttt{{[}segment\_count\ +\ 1{]}Point} & The set of points of this polygon. \\
+segment\_count   & \texttt{u6}                          & The number of points in the polygon. This value is offset by 1. \\
+sec\_style\_kind & \texttt{u2}                          & The secondary style used in this command. \\
+fill\_style      & \texttt{Style(prim\_style\_kind)}    & The style that is used to fill the polygon. \\
+line\_style      & \texttt{Style(sec\_style\_kind)}     & The style that is used to draw the outline of the polygon. \\
+line\_width      & \texttt{Unit}                        & The width of the line. \\
+points           & \texttt{{[}segment\_count+1{]}Point} & The set of points of this polygon. \\
 \bottomrule
 \end{longtable}
 
@@ -793,12 +814,12 @@ The command is structured like this:
 Field & Type & Description \\
 \midrule
 \endhead
-rectangle\_count & \texttt{u6} & The number of rectangles. This value is offset by 1. \\
-sec\_style\_kind & \texttt{u2} & The secondary style used in this command. \\
-fill\_style & \texttt{Style(prim\_style\_kind)} & The style that is used to fill the polygon. \\
-line\_style & \texttt{Style(sec\_style\_kind)} & The style that is used to draw the outline of the polygon. \\
-line\_width & \texttt{Unit} & The width of the line. \\
-rectangles & \texttt{{[}rectangle\_count+1{]}Rectangle} & The set of points of this polygon. \\
+rect\_count & \texttt{u6}                                & The number of rectangles. This value is offset by 1. \\
+sec\_style\_kind & \texttt{u2}                           & The secondary style used in this command. \\
+fill\_style      & \texttt{Style(prim\_style\_kind)}     & The style that is used to fill the polygon. \\
+line\_style      & \texttt{Style(sec\_style\_kind)}      & The style that is used to draw the outline of the polygon. \\
+line\_width      & \texttt{Unit}                         & The width of the line. \\
+rectangles       & \texttt{{[}rect\_count+1{]}Rectangle} & The list of rectangles to be drawn. \\
 \bottomrule
 \end{longtable}
 
@@ -824,17 +845,18 @@ The command is structured like this:
 Field & Type & Description \\
 \midrule
 \endhead
-segment\_count & \texttt{u6} & The number of points in the polygon. This value is offset by 1. \\
-sec\_style\_kind & \texttt{u2} & The secondary style used in this command. \\
-fill\_style & \texttt{Style(prim\_style\_kind)} & The style that is used to fill the polygon. \\
-line\_style & \texttt{Style(sec\_style\_kind)} & The style that is used to draw the outline of the polygon. \\
-line\_width & \texttt{Unit} & The width of the line. \\ path & \texttt{Path(segment\_count+1)} & The set of points of this polygon. \\
+segment\_count   & \texttt{u6}                       & The number of points in the polygon. This value is offset by 1. \\
+sec\_style\_kind & \texttt{u2}                       & The secondary style used in this command. \\
+fill\_style      & \texttt{Style(prim\_style\_kind)} & The style that is used to fill the polygon. \\
+line\_style      & \texttt{Style(sec\_style\_kind)}  & The style that is used to draw the outline of the polygon. \\
+line\_width      & \texttt{Unit}                     & The width of the line. \\
+path             & \texttt{Path(segment\_count+1)}   & The path that should be drawn. \\
 \bottomrule
 \end{longtable}
 
-This command is a combination of \emph{Fill Path} and \emph{Draw Path}.
+This command is a combination of \emph{Fill Path} and \emph{Draw Line Path}.
 It first performs a \emph{Fill Path} with the \texttt{fill\_style}, then
-performs \emph{Draw Path} with \texttt{line\_style} and
+performs \emph{Draw Line Path} with \texttt{line\_style} and
 \texttt{line\_width}.
 
 The outline commands use a reduced number of elements, the maximum
@@ -859,7 +881,7 @@ color. \\
 Left to right the three gradient types:
 
 \begin{center}
-\includegraphics{graphics/gradients.pdf}
+\includegraphics{graphics/gradients.png}
 \end{center}
 
 \hypertarget{flat-colored}{\subsubsection{Flat Colored}\label{flat-colored}}
@@ -883,8 +905,8 @@ in the color table.
 Field & Type & Description \\
 \midrule
 \endhead
-point\_0 & \texttt{Point} & The start point of the gradient. \\
-point\_1 & \texttt{Point} & The end point of the gradient. \\
+point\_0        & \texttt{Point}   & The start point of the gradient. \\
+point\_1        & \texttt{Point}   & The end point of the gradient. \\
 color\_index\_0 & \texttt{VarUInt} & The color at \texttt{point\_0}. \\
 color\_index\_1 & \texttt{VarUInt} & The color at \texttt{point\_1}. \\
 \bottomrule
@@ -896,11 +918,13 @@ The gradient is formed by a mental line between \texttt{point\_0} and
 \texttt{point\_1} is the color at \texttt{color\_index\_1} in the color
 table.
 
-On the line, the color is linearly interpolated between the two points.
+On the line, the color is interpolated between the two points.
 Each point that is not on the line is orthogonally projected to the line
 and the color at that point is sampled. Points that are not projectable
 onto the line have either the color at \texttt{point\_0} if they are
 closed to \texttt{point\_0} or vice versa for \texttt{point\_1}.
+
+See the \hypertarget{color-interpolation}{Color Interpolation} chapter on how to perform the color interpolation in detail.
 
 \hypertarget{radial-gradient}{\subsubsection{Radial Gradient}\label{radial-gradient}}
 
@@ -909,8 +933,8 @@ closed to \texttt{point\_0} or vice versa for \texttt{point\_1}.
 Field & Type & Description \\
 \midrule
 \endhead
-point\_0 & \texttt{Point} & The start point of the gradient. \\
-point\_1 & \texttt{Point} & The end point of the gradient. \\
+point\_0        & \texttt{Point}   & The start point of the gradient. \\
+point\_1        & \texttt{Point}   & The end point of the gradient. \\
 color\_index\_0 & \texttt{VarUInt} & The color at \texttt{point\_0}. \\
 color\_index\_1 & \texttt{VarUInt} & The color at \texttt{point\_1}. \\
 \bottomrule
@@ -925,10 +949,12 @@ The color at \texttt{point\_0} is the color at \texttt{color\_index\_0}
 in the color table, the color on the circle outline is the color at
 \texttt{color\_index\_1} in the color table.
 
-If a sampled point is inside the circle, a linear color interpolation is
-done based on the distance to the center and the radius. If the point is
+If a sampled point is inside the circle, the color is interpolated based
+on the distance to the center and the radius. If the point is
 not in the circle itself, the color at \texttt{color\_index\_1} is
 always taken.
+
+See the \hypertarget{color-interpolation}{Color Interpolation} chapter on how to perform the color interpolation in detail.
 
 \hypertarget{pathsegment_count}{\subsection{\texorpdfstring{\texttt{Path(segment\_count)}}{Path(segment\_count)}}\label{pathsegment_count}}
 
@@ -948,14 +974,13 @@ The following instructions to move the "pen" are available:
 Index & Instruction & Short Description \\
 \midrule
 \endhead
-0 & line & A straight line is drawn from the current point to a new
-point. \\
-1 & horizontal line & A straight horizontal line is drawn from the current point to a new \texttt{x} coordinate. \\
-2 & vertical line & A straight vertical line is drawn from the current point to a new \texttt{y} coordiante. \\
-3 & cubic bezier & A cubic Bézier curve is drawn from the current point to a new point. \\
-4 & arc circle & A circle segment is drawn from current point to a new point. \\
-5 & arc ellipse & An ellipse segment is drawn from current point to a new point. \\
-6 & close path & The path is closed, and a straight line is drawn to the starting point. \\
+0 & line             & A straight line is drawn from the current point to a new point. \\
+1 & horizontal line  & A straight horizontal line is drawn from the current point to a new \texttt{x} coordinate. \\
+2 & vertical line    & A straight vertical line is drawn from the current point to a new \texttt{y} coordiante. \\
+3 & cubic bezier     & A cubic Bézier curve is drawn from the current point to a new point. \\
+4 & arc circle       & A circle segment is drawn from current point to a new point. \\
+5 & arc ellipse      & An ellipse segment is drawn from current point to a new point. \\
+6 & close path       & The path is closed, and a straight line is drawn to the starting point. \\
 7 & quadratic bezier & A quadratic Bézier curve is drawn from the current point to a new point. \\
 \bottomrule
 \end{longtable}
@@ -968,7 +993,7 @@ is chosen:
 \tightlist
 \item
   For each segment in the path, the number of commands is encoded as a
-  \texttt{VarUInt}.
+  \texttt{VarUInt-1}. Decoding a 0 means that 1 element is stored in the segment.
 \item
   For each segment in the path:
 
@@ -1005,6 +1030,31 @@ has\_line\_width & \texttt{u1} & If \texttt{1}, a line width is present. \\
 \emph{padding} & \texttt{u3} & Always 0 \\
 \bottomrule
 \end{longtable}
+
+\paragraph{Path encoding example} As this is a very untypical kind of encoding, the following example will showcase how a path is encoded. The path will have 3 segments of different length. For conciseness, the encoding of each individual path component is left out. The unit format is default (16 bit coordinates) with 2 bit precision.
+
+\begin{longtable}[]{@{}p{1.5in}p{1in}p{3.5in}@{}}
+  \toprule
+  Component & Byte Sequence & Meaning \\
+  \midrule
+  \endhead
+  Segment 0 length    & \texttt{02}                & Number of elements in segment 0 is 3 \\
+  Segment 1 length    & \texttt{03}                & Number of elements in segment 1 is 4 \\
+  Segment 2 length    & \texttt{80 10}             & Number of elements in segment 2 is 129 \\
+  Segment 0 start     & \texttt{00 00 00 00}       & Segment 0 starts at (0, 0) \\
+  Segment 0 command 0 & \texttt{03 \ldots}         & Draw cubic bezier to \ldots{}\\
+  Segment 0 command 1 & \texttt{02 \ldots}         & Draw vertical line to \ldots{}\\
+  Segment 0 command 2 & \texttt{00}                & Close path \\
+  Segment 1 start     & \texttt{90 10 38 FF}       & Segment 1 starts at (100, -50) \\
+  Segment 1 command 0 & \texttt{84 0A 00 \ldots{}} & Draw arc circle to \ldots{} and change line width to 2.5 \\
+  Segment 1 command 1 & \texttt{00}                & Close path  \\
+  Segment 1 command 2 & \texttt{04 00 \ldots{}}    & Draw arc circle to \ldots{} \\
+  Segment 1 command 3 & \texttt{00}                & Close path \\
+  Segment 2 start     & \texttt{38 FF 90 10}       & Segment 2 starts at (-50, 100) \\
+  Segment 2 command 0 & \texttt{\ldots}            &  \\
+  \ldots              & & \\
+  \bottomrule
+  \end{longtable}
 
 \hypertarget{line-1}{\subsubsection{Line}\label{line-1}}
 
@@ -1078,11 +1128,11 @@ point.
 Field & Type & Description \\
 \midrule
 \endhead
-large\_arc & \texttt{u1} & If \texttt{1}, the large portion of the circle segment is drawn \\
-sweep & \texttt{u1} & Determines if the circle segment is left- or right bending. \\
-\emph{padding} & \texttt{u6} & Always 0. \\
-radius & \texttt{Unit} & The radius of the circle. \\
-target & \texttt{Point} & The end point of the circle segment. \\
+large\_arc     & \texttt{u1}    & If \texttt{1}, the large portion of the circle segment is drawn \\
+sweep          & \texttt{u1}    & Determines if the circle segment is left- or right bending. \\
+\emph{padding} & \texttt{u6}    & Always 0. \\
+radius         & \texttt{Unit}  & The radius of the circle. \\
+target         & \texttt{Point} & The end point of the circle segment. \\
 \bottomrule
 \end{longtable}
 
@@ -1154,8 +1204,88 @@ point\_1 & \texttt{Point} & The end point of the Bézier curve. \\
 The curve is drawn between the current location and \texttt{point\_1}
 with \texttt{control} being the control point.
 
-\hypertarget{revision-history}{%
-\section{Revision History}\label{revision-history}}
+\hypertarget{rendering}{\section{Rendering}\label{rendering}}
+
+This chapter specifies details of the TinyVG rendering so all images will look the same on different platforms.
+
+The following formulas and code examples use color intensity values between 0.0 and 1.0.
+
+\hypertarget{linear-conversion}{\subsection{Linear Color Space Conversion}\label{linear-conversion}}
+
+Certain rendering options must happen in linear color space. For each color space, a conversion routine is defined in the specification of that color space.
+
+For sRGB, the following routines can be used:
+\begin{lstlisting}[language=c]
+RGB toColorSpace(RGB val) {
+  return pow(val, 1.0 / 2.2);
+}
+
+RGB toLinear(RGB val) {
+  return pow(val, 2.2);
+}
+\end{lstlisting}
+
+\hypertarget{alpha-blending}{\subsection{Alpha Blending}\label{alpha-blending}}
+
+Alpha blending describes the process of blending two transparent colors over each other. As TinyVG has a transparent background by default, transparency must be respected when blending colors together.
+
+\begin{lstlisting}[language=c]
+// Blends the src color over the dst color
+RGBA blend(RGBA dst, RGBA src) {
+  if (src.a == 0) {
+      return dst;
+  }
+  if (src.a == 1.0) {
+      return src;
+  }
+
+  const alpha = src.a + (1.0 - src.a) * dst.a;
+
+  return RGBA(
+      .r = lerpColor(src.r, dst.r, src.a, dst.a, fin_alpha),
+      .g = lerpColor(src.g, dst.g, src.a, dst.a, fin_alpha),
+      .b = lerpColor(src.b, dst.b, src.a, dst.a, fin_alpha),
+      .a = alpha,
+  );
+}
+
+float lerpColor(float src, float dst, float src_alpha, float dst_alpha, float alpha) {
+    const src_val = toLinear(src);
+    const dst_val = toLinear(dst);
+
+    const value = (1.0 / alpha) * (src_alpha * src + (1.0 - src_alpha) * dst_alpha * dst);
+
+    return toColorSpace(value);
+}
+\end{lstlisting}
+
+\hypertarget{color-interpolation}{\subsection{Color Interpolation}\label{color-interpolation}}
+
+Color interpolation is needed in gradients and must performed in linear color space. This means that the value from the color table needs to be converted to linear color space, then each color component is interpolated linearly and the final color is then determined by converting the color back to the specified color space.
+
+\begin{lstlisting}[language=c]
+RGBA blend(RGBA first, RGBA second, float f) {
+  f = clamp(f, 0.0, 1.0);
+  return RGBA {
+    .rgb = toColorSpace(
+      lerp(toLinear(first.rgb), toLinear(second.rgb), f)
+    ),
+    .a = lerp(first.a, second.a, f),
+  );
+}
+
+lerp(a, b, float f) {
+  return a + (b-a) * f;
+}
+\end{lstlisting}
+
+\hypertarget{line-rendering}{\subsection{Line Rendering}\label{line-rendering}}
+
+Lines are rendered with round line caps and use a total width. Lines in TinyVG can be seen as the Minkowski sum of a sphere with the line width a diameter and the line itself.
+
+Lines that have a width less than a \emph{pixel} on the final display, they should be rendered as exactly on pixel wide. Otherwise lines might get invisible, jagged or otherwise incomplete.
+
+\hypertarget{revision-history}{\section{Revision History}\label{revision-history}}
 
 \hypertarget{10}{%
 \subsection{1.0}\label{10}}
