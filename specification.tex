@@ -82,7 +82,7 @@
 \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
 \usepackage{longtable,booktabs,array}
 \usepackage{calc} % for calculating minipage widths
-% Correct order of tables after \paragraph or \subparagraph
+% Correct order of tables after \subsubsection or \subparagraph
 \usepackage{etoolbox}
 \makeatletter
 \patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
@@ -139,9 +139,9 @@
   \end{center}
 \end{titlepage}
 
-\hypertarget{introduction}{\subsection{Introduction}\label{introduction}}
+\hypertarget{introduction}{\section{Introduction}\label{introduction}}
 
-\hypertarget{why-a-new-format}{\subsubsection{Why a new format}\label{why-a-new-format}}
+\hypertarget{why-a-new-format}{\subsection{Why a new format}\label{why-a-new-format}}
 
 SVG is the status quo widespread vector format. Every program can kinda
 use it and can probably render it right to some extent. The problem is
@@ -169,7 +169,7 @@ TinyVG was created to address most of these problems, trying to achieve a
 balance between flexibility and file size, while keeping file size as
 the more important priority.
 
-\hypertarget{features}{\subsubsection{Features}\label{features}}
+\hypertarget{features}{\subsection{Features}\label{features}}
 
 \begin{itemize}
 \tightlist
@@ -194,13 +194,13 @@ the more important priority.
 \item Dense encoding, there are near zero padding bits and every byte is used as good as possible.
 \end{itemize}
 
-\hypertarget{recognition}{\subsection{Recognizing TinyVG}\label{recognition}}
+\hypertarget{recognition}{\section{Recognizing TinyVG}\label{recognition}}
 
 TinyVG is using the \texttt{.tvg} file extension and should use the \texttt{image/tinyvg} mime type.
 
 The textual representation should use the \texttt{.tvgt} file extension and the \texttt{text/tinyvg} mime type.
 
-\hypertarget{format}{\subsection{Format}\label{format}}
+\hypertarget{binary-encoding}{\section{Binary Encoding}\label{binary-encoding}}
 
 TinyVG files are roughly structured like this:
 
@@ -222,21 +222,21 @@ one time overhead. This encoding scheme was chosen as a vector graphic
 typically doesn't use as many different colors as bitmap graphics and
 thus can be encoded more optimally.
 
-\textbf{NOTE:} The following documentation uses a tabular style to
-document structures. All integers are assumed to be encoded in
-little-endian byte order if not specified otherwise. The \emph{Type}
-column of each structure definition uses a Zig notation for types and
-the fields have no padding bits in between. If a field does not align to
-a byte boundary, the next field will be offset into the byte by the
-current fields bit offset + bit size. This means, that two consecutive
-fields \textbf{a} (\texttt{u3}) and \textbf{b} (\texttt{u5}) can be
-extracted from the byte by using
-\texttt{(byte\ \&\ 0x7)\ \textgreater{}\textgreater{}\ 0} for \textbf{a}
-and \texttt{(byte\ \&\ 0xF8)\ \textgreater{}\textgreater{}\ 3} for
-\textbf{b}.
+\subsubsection{NOTES}
+\begin{itemize}
+\item The following documentation uses a tabular style to document structures.
+\item All integers are assumed to be encoded in little-endian byte order if not specified otherwise. 
+\item The \emph{Type} column of each structure definition uses a Zig notation for types and the fields
+      have no padding bits in between. If a field does not align to a byte boundary, the next field will
+      be offset into the byte by the current fields bit offset + bit size. This means, that two consecutive
+      fields \textbf{a} (\texttt{u3}) and \textbf{b} (\texttt{u5}) can be extracted from the byte by using
+      \texttt{(byte\ \&\ 0x7)\ \textgreater{}\textgreater{}\ 0} for \textbf{a} and \texttt{(byte\ \&\ 0xF8)\ \textgreater{}\textgreater{}\ 3}
+      for \textbf{b}.
+\item  If not specified otherwise, all coordinates in TinyVG are absolute coordinates, including path nodes and gradients.
+\end{itemize}
 
 \hypertarget{coordinate-system}{%
-\subsubsection{Coordinate system}\label{coordinate-system}}
+\subsection{Coordinate system}\label{coordinate-system}}
 
 TinyVG uses the 2-dimensional \href{https://en.wikipedia.org/wiki/Cartesian_coordinate_system}{Cartesian
 coordinate system} with X being the positive horizontal distance to the
@@ -248,7 +248,7 @@ coordinate system of several other image formats:
   \includegraphics[width=0.5\textwidth]{graphics/coordinates.pdf}
 \end{center}
 
-\hypertarget{header}{\subsubsection{Header}\label{header}}
+\hypertarget{header}{\subsection{Header}\label{header}}
 
 Each TVG file starts with a header defining some global values for the
 file like scale and image size. The header is always at offset 0 in a
@@ -271,7 +271,7 @@ color\_count & \texttt{VarUInt} & The number of colors in the \protect\hyperlink
 \bottomrule
 \end{longtable}
 
-\hypertarget{color-encoding}{\paragraph{Color Encoding}\label{color-encoding}}
+\hypertarget{color-encoding}{\subsubsection{Color Encoding}\label{color-encoding}}
 
 The color encoding defines which format the colors in the color table
 will have:
@@ -282,13 +282,13 @@ Value & Enumeration & Description \\
 \midrule
 \endhead
 0 & RGBA 8888 & Each color is a 4-tuple (red, green, blue, alpha) of bytes with the color channels encoded in sRGB and the alpha as linear alpha. \\
-1 & RGB 565 & Each color is encoded as a 3-tuple (red, green, blue) with 16 bit per color. While red and blue both use 5 bit, the green channel uses 6 bit. red uses bit range 0...4, green bits 5...10 and blue bits 11...15. \\
-2 & RGBA F32 & Each color is a 4-tuple (red, green ,blue, alpha) of binary32 IEEE 754 floating point value with the color channels encoded in sRGB and the alpha as linear alpha. A color value of \texttt{1.0} is full intensity, while a value of \texttt{0.0} is zero intensity. \\
+1 & RGB 565 & Each color is encoded as a 3-tuple (red, green, blue) with 16 bit per color. While red and blue both use 5 bit, the green channel uses 6 bit. red uses bit range 0...4, green bits 5...10 and blue bits 11...15. This color also uses the sRGB color space.\\
+2 & RGBA F32 & Each color is a 4-tuple (red, green ,blue, alpha) of binary32 IEEE 754 floating point value with the color channels encoded in scRGB and the alpha as linear alpha. A color value of \texttt{1.0} is full intensity, while a value of \texttt{0.0} is zero intensity. \\
 3 & Custom & The custom color encoding is \emph{defined undefined}. The information how these colors are encoded must be implemented via external means. \\
 \bottomrule
 \end{longtable}
 
-\hypertarget{coordinate-range}{\paragraph{Coordinate Range}\label{coordinate-range}}
+\hypertarget{coordinate-range}{\subsubsection{Coordinate Range}\label{coordinate-range}}
 
 The coordinate range defines how many bits a
 \protect\hyperlink{units}{\texttt{Unit}} value uses:
@@ -304,7 +304,7 @@ Value & Enumeration & Description \\
 \bottomrule
 \end{longtable}
 
-\hypertarget{varuint}{\paragraph{\texorpdfstring{\texttt{VarUInt}}{VarUInt}}\label{varuint}}
+\hypertarget{varuint}{\subsubsection{\texorpdfstring{\texttt{VarUInt}}{VarUInt}}\label{varuint}}
 
 This type is used to encode 32 bit unsigned integers while keeping the
 number of bytes low. It is encoded as a variable-sized integer that uses
@@ -363,14 +363,14 @@ bytes for encoding unsigned integers.
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{color-table}{\subsubsection{Color Table}\label{color-table}}
+\hypertarget{color-table}{\subsection{Color Table}\label{color-table}}
 
 The color table encodes the palette for this file. It's binary content
 is defined by the \texttt{color\_encoding} field in the header. For the
 three defined color encodings, each will yield a list of
 \texttt{color\_count} RGBA tuples.
 
-\hypertarget{rgba-8888}{\paragraph{RGBA 8888}\label{rgba-8888}}
+\hypertarget{rgba-8888}{\subsubsection{RGBA 8888}\label{rgba-8888}}
 
 Each color value is encoded as a sequence of four bytes:
 
@@ -379,16 +379,18 @@ Each color value is encoded as a sequence of four bytes:
 Field & Type & Description \\
 \midrule
 \endhead
-red & \texttt{u8} & Red color channel between 0.0 and 1.0, mapped to byte values 0 to 255. \\
-green & \texttt{u8} & Green color channel between 0.0 and 1.0, mapped to byte values 0 to 255. \\
-blue & \texttt{u8} & Blue color channel between 0.0 and 1.0, mapped to byte values 0 to 255. \\
-alpha & \texttt{u8} & Transparency channel between 0.0 and 1.0, mapped to byte values 0 to 255. \\
+red & \texttt{u8} & Red color channel between 0 and 100\% intensity, mapped to byte values 0 to 255. \\
+green & \texttt{u8} & Green color channel between 0 and 100\% intensity, mapped to byte values 0 to 255. \\
+blue & \texttt{u8} & Blue color channel between 0 and 100\% intensity, mapped to byte values 0 to 255. \\
+alpha & \texttt{u8} & Transparency channel between 0 and 100\% transparency, mapped to byte values 0 to 255. \\
 \bottomrule
 \end{longtable}
 
 The size of the color table is \texttt{4\ *\ color\_count}.
 
-\hypertarget{rgb-565}{\paragraph{RGB 565}\label{rgb-565}}
+This color encoding uses the sRGB color space.
+
+\hypertarget{rgb-565}{\subsubsection{RGB 565}\label{rgb-565}}
 
 Each color value is encoded as a sequence of 2 bytes:
 
@@ -397,16 +399,18 @@ Each color value is encoded as a sequence of 2 bytes:
 Field & Type & Description \\
 \midrule
 \endhead
-red & \texttt{u5} & Red color channel between 0.0 and 1.0, mapped to integer values 0 to 31. \\
-green & \texttt{u6} & Green color channel between 0.0 and 1.0, mapped to integer values 0 to 63. \\
-blue & \texttt{u5} & Blue color channel between 0.0 and 1.0, mapped to integer values 0 to 31. \\
+red & \texttt{u5} & Red color channel between 0 and 100\% intensity, mapped to integer values 0 to 31. \\
+green & \texttt{u6} & Green color channel between 0 and 100\% intensity, mapped to integer values 0 to 63. \\
+blue & \texttt{u5} & Blue color channel between 0 and 100\% intensity, mapped to integer values 0 to 31. \\
 \bottomrule
 \end{longtable}
 
 The size of the color table is \texttt{2\ *\ color\_count}, and all
 colors are fully opaque.
 
-\hypertarget{rgba-f32}{\paragraph{RGBA F32}\label{rgba-f32}}
+This color encoding uses the sRGB color space.
+
+\hypertarget{rgba-f32}{\subsubsection{RGBA F32}\label{rgba-f32}}
 
 Each color value is encoded as a sequence of 16 bytes:
 
@@ -415,23 +419,25 @@ Each color value is encoded as a sequence of 16 bytes:
 Field & Type & Description \\
 \midrule
 \endhead
-red & \texttt{f32} & Red color channel between 0.0 and 1.0. \\
-green & \texttt{f32} & Green color channel between 0.0 and 1.0. \\
-blue & \texttt{f32} & Blue color channel between 0.0 and 1.0. \\
-alpha & \texttt{f32} & Transparency channel between 0.0 and 1.0. \\
+red   & \texttt{f32} & Red color channel, using 0.0 for 0\% intensity and 1.0 for 100\% intensity. \\
+green & \texttt{f32} & Green color channel, using 0.0 for 0\% intensity and 1.0 for 100\% intensity. \\
+blue  & \texttt{f32} & Blue color channel, using 0.0 for 0\% intensity and 1.0 for 100\% intensity. \\
+alpha & \texttt{f32} & Transparency channel between 0 and 100\% transparency, mapped to byte values 0.0 to 1.0. \\
 \bottomrule
 \end{longtable}
 
 The size of the color table is \texttt{16\ *\ color\_count}.
 
-\hypertarget{custom}{\paragraph{Custom}\label{custom}}
+This color encoding uses the scRGB color space, so the intensity is allowed to be both negative and positive for a wider color gamut.
+
+\hypertarget{custom}{\subsubsection{Custom}\label{custom}}
 
 The TinyVG specification does not describe the size nor format of this
 kind of color table. An implementation specific format is expected. A
 conforming parser is allowed to reject files with this color format as
 "unsupported".
 
-\hypertarget{commands}{\subsubsection{Commands}\label{commands}}
+\hypertarget{commands}{\subsection{Commands}\label{commands}}
 
 TinyVG files contain a sequence of draw commands that must be executed
 in the defined order to get the final result. Each draw command adds a
@@ -470,7 +476,7 @@ prim\_style\_kind & \texttt{u2} & The type of style this command uses as a prima
 \bottomrule
 \end{longtable}
 
-\hypertarget{end-of-document}{\paragraph{End Of Document}\label{end-of-document}}
+\hypertarget{end-of-document}{\subsubsection{End Of Document}\label{end-of-document}}
 
 If this command is read, the TinyVG file has ended. This command must
 have \texttt{prim\_style\_kind} to be set to 0, so the last byte of
@@ -479,7 +485,7 @@ every TinyVG file is \texttt{0x00}.
 Every byte after this command is considered not part of the TinyVG data
 and can be used for other purposes like metadata or similar.
 
-\hypertarget{fill-polygon}{\paragraph{Fill Polygon}\label{fill-polygon}}
+\hypertarget{fill-polygon}{\subsubsection{Fill Polygon}\label{fill-polygon}}
 
 Fills a \href{https://en.wikipedia.org/wiki/Polygon}{polygon} with N points.
 
@@ -542,7 +548,7 @@ divided into the final value. For example, with a \emph{reduced} value
 of \texttt{0x13} and a scale of \texttt{4}, we get the final value of
 1.1875, as the number is interpretet as binary \texttt{b0001.0011}.
 
-\hypertarget{fill-rectangles}{\paragraph{Fill Rectangles}\label{fill-rectangles}}
+\hypertarget{fill-rectangles}{\subsubsection{Fill Rectangles}\label{fill-rectangles}}
 
 Fills a list of rectangles.
 
@@ -586,7 +592,7 @@ height & \protect\hyperlink{units}{\texttt{Unit}} & Vertical extent of the recta
 \bottomrule
 \end{longtable}
 
-\hypertarget{fill-path}{\paragraph{Fill Path}\label{fill-path}}
+\hypertarget{fill-path}{\subsubsection{Fill Path}\label{fill-path}}
 
 Fills a \protect\hyperlink{path}{path}. Paths are described further
 below in more detail to keep this section short.
@@ -618,7 +624,7 @@ with even-odd rule) that, when overlap, also perform the even odd rule.
 This allows the user to carve out parts of the path and create
 arbitrarily shaped surfaces.
 
-\hypertarget{draw-lines}{\paragraph{Draw Lines}\label{draw-lines}}
+\hypertarget{draw-lines}{\subsubsection{Draw Lines}\label{draw-lines}}
 
 Draws a set of lines.
 
@@ -654,7 +660,7 @@ end & \protect\hyperlink{point}{\texttt{Point}} & End point of the line. \\
 \bottomrule
 \end{longtable}
 
-\hypertarget{draw-line-loop}{\paragraph{Draw Line Loop}\label{draw-line-loop}}
+\hypertarget{draw-line-loop}{\subsubsection{Draw Line Loop}\label{draw-line-loop}}
 
 Draws a polygon.
 
@@ -687,7 +693,7 @@ the last point.
 \includegraphics{graphics/draw-line-loop.pdf}
 \end{center}
 
-\hypertarget{draw-line-strip}{\paragraph{Draw Line Strip}\label{draw-line-strip}}
+\hypertarget{draw-line-strip}{\subsubsection{Draw Line Strip}\label{draw-line-strip}}
 
 Draws a list of consecutive lines.
 
@@ -719,7 +725,7 @@ The lines are drawn between consecutive points, but contrary to \emph{Draw Line 
 \includegraphics{graphics/draw-line-strip.pdf}
 \end{center}
 
-\hypertarget{draw-line-path}{\paragraph{Draw Line Path}\label{draw-line-path}}
+\hypertarget{draw-line-path}{\subsubsection{Draw Line Path}\label{draw-line-path}}
 
 Draws a \protect\hyperlink{path}{path}. Paths are described further
 below in more detail to keep this section short.
@@ -746,7 +752,7 @@ a single display pixel. This means that \texttt{line\_width} of 0 is
 still visible, even though only marginally. This allows very thin
 outlines.
 
-\hypertarget{outline-fill-polygon}{\paragraph{Outline Fill Polygon}\label{outline-fill-polygon}}
+\hypertarget{outline-fill-polygon}{\subsubsection{Outline Fill Polygon}\label{outline-fill-polygon}}
 
 Fills a polygon and draws an outline at the same time.
 
@@ -776,7 +782,7 @@ This command is a combination of \emph{Fill Polygon} and \emph{Draw Line Loop}. 
 The outline commands use a reduced number of elements, the maximum
 number of points is 64.
 
-\hypertarget{outline-fill-rectangles}{\paragraph{Outline Fill Rectangles}\label{outline-fill-rectangles}}
+\hypertarget{outline-fill-rectangles}{\subsubsection{Outline Fill Rectangles}\label{outline-fill-rectangles}}
 
 Fills and outlines a list of rectangles.
 
@@ -807,7 +813,7 @@ like this:
 The outline commands use a reduced number of elements, the maximum
 number of points is 64.
 
-\hypertarget{outline-fill-path}{\paragraph{Outline Fill Path}\label{outline-fill-path}}
+\hypertarget{outline-fill-path}{\subsubsection{Outline Fill Path}\label{outline-fill-path}}
 
 Fills a path and draws an outline at the same time.
 
@@ -834,7 +840,7 @@ performs \emph{Draw Path} with \texttt{line\_style} and
 The outline commands use a reduced number of elements, the maximum
 number of points is 64.
 
-\hypertarget{stylestyle_type}{\subsubsection{\texorpdfstring{\texttt{Style(style\_type)}}{Style(style\_type)}}\label{stylestyle_type}}
+\hypertarget{stylestyle_type}{\subsection{\texorpdfstring{\texttt{Style(style\_type)}}{Style(style\_type)}}\label{stylestyle_type}}
 
 There are three types of style available:
 
@@ -856,7 +862,7 @@ Left to right the three gradient types:
 \includegraphics{graphics/gradients.pdf}
 \end{center}
 
-\hypertarget{flat-colored}{\paragraph{Flat Colored}\label{flat-colored}}
+\hypertarget{flat-colored}{\subsubsection{Flat Colored}\label{flat-colored}}
 
 \begin{longtable}[]{@{}p{1in}p{1in}p{4in}@{}}
 \toprule
@@ -870,7 +876,7 @@ color\_index & \texttt{VarUInt} & The index into the color table \\
 The shape is uniformly colored with the color at \texttt{color\_index}
 in the color table.
 
-\hypertarget{linear-gradient}{\paragraph{Linear Gradient}\label{linear-gradient}}
+\hypertarget{linear-gradient}{\subsubsection{Linear Gradient}\label{linear-gradient}}
 
 \begin{longtable}[]{@{}p{1in}p{1in}p{4in}@{}}
 \toprule
@@ -896,7 +902,7 @@ and the color at that point is sampled. Points that are not projectable
 onto the line have either the color at \texttt{point\_0} if they are
 closed to \texttt{point\_0} or vice versa for \texttt{point\_1}.
 
-\hypertarget{radial-gradient}{\paragraph{Radial Gradient}\label{radial-gradient}}
+\hypertarget{radial-gradient}{\subsubsection{Radial Gradient}\label{radial-gradient}}
 
 \begin{longtable}[]{@{}p{1in}p{1in}p{4in}@{}}
 \toprule
@@ -924,7 +930,7 @@ done based on the distance to the center and the radius. If the point is
 not in the circle itself, the color at \texttt{color\_index\_1} is
 always taken.
 
-\hypertarget{pathsegment_count}{\subsubsection{\texorpdfstring{\texttt{Path(segment\_count)}}{Path(segment\_count)}}\label{pathsegment_count}}
+\hypertarget{pathsegment_count}{\subsection{\texorpdfstring{\texttt{Path(segment\_count)}}{Path(segment\_count)}}\label{pathsegment_count}}
 
 Paths describe instructions to create complex 2D graphics.
 
@@ -1000,7 +1006,7 @@ has\_line\_width & \texttt{u1} & If \texttt{1}, a line width is present. \\
 \bottomrule
 \end{longtable}
 
-\hypertarget{line-1}{\paragraph{Line}\label{line-1}}
+\hypertarget{line-1}{\subsubsection{Line}\label{line-1}}
 
 The line instruction draws a straight line to the \texttt{position}.
 
@@ -1013,7 +1019,7 @@ position & \texttt{Point} & The end point of the line. \\
 \bottomrule
 \end{longtable}
 
-\hypertarget{horizontal-line}{\paragraph{Horizontal Line}\label{horizontal-line}}
+\hypertarget{horizontal-line}{\subsubsection{Horizontal Line}\label{horizontal-line}}
 
 The horizontal line instruction draws a straight horizontal line to a
 given \texttt{x} coordinate.
@@ -1027,7 +1033,7 @@ x & \texttt{Unit} & The new \texttt{x} coordinate. \\
 \bottomrule
 \end{longtable}
 
-\hypertarget{vertical-line}{\paragraph{Vertical Line}\label{vertical-line}}
+\hypertarget{vertical-line}{\subsubsection{Vertical Line}\label{vertical-line}}
 
 The vertical line instruction draws a straight vertical line to a given
 \texttt{y} coordinate.
@@ -1042,7 +1048,7 @@ y & \texttt{Unit} & The new \texttt{y} coordinate. \\
 \end{longtable}
 
 \hypertarget{cubic-bezier}{%
-\paragraph{Cubic Bézier}\label{cubic-bezier}}
+\subsubsection{Cubic Bézier}\label{cubic-bezier}}
 
 The cubic bezier instruction draws a Bézier curve with two control
 points.
@@ -1062,7 +1068,7 @@ The curve is drawn between the current location and \texttt{point\_1}
 with \texttt{control\_0} being the first control point and
 \texttt{control\_1} being the second one.
 
-\hypertarget{arc-circle}{\paragraph{Arc Circle}\label{arc-circle}}
+\hypertarget{arc-circle}{\subsubsection{Arc Circle}\label{arc-circle}}
 
 Draws a circle segment between the current and the \texttt{target}
 point.
@@ -1091,7 +1097,7 @@ otherwise it will make a right turn. This means that if we go from the
 current point to \texttt{target}, a rotation to the movement direction
 is necessary to either the left or the right.
 
-\hypertarget{arc-ellipse}{\paragraph{Arc Ellipse}\label{arc-ellipse}}
+\hypertarget{arc-ellipse}{\subsubsection{Arc Ellipse}\label{arc-ellipse}}
 
 Draws an ellipse segment between the current and the \texttt{target}
 point.
@@ -1124,13 +1130,13 @@ otherwise it will make a right turn. This means that if we go from the
 current point to \texttt{target}, a rotation to the movement direction
 is necessary to either the left or the right.
 
-\hypertarget{close-path}{\paragraph{Close Path}\label{close-path}}
+\hypertarget{close-path}{\subsubsection{Close Path}\label{close-path}}
 
 A straight line is drawn to the start location of the current segment.
 This instruction doesn't have additional data encoded.
 
 \hypertarget{quadratic-bezier}{%
-\paragraph{Quadratic Bézier}\label{quadratic-bezier}}
+\subsubsection{Quadratic Bézier}\label{quadratic-bezier}}
 
 The quadratic bezier instruction draws a Bézier curve with a single
 control point.
@@ -1149,10 +1155,10 @@ The curve is drawn between the current location and \texttt{point\_1}
 with \texttt{control} being the control point.
 
 \hypertarget{revision-history}{%
-\subsection{Revision History}\label{revision-history}}
+\section{Revision History}\label{revision-history}}
 
 \hypertarget{10}{%
-\subsubsection{1.0}\label{10}}
+\subsection{1.0}\label{10}}
 
 \begin{itemize}
 \tightlist
