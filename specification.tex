@@ -380,6 +380,35 @@ Integer Value & Byte Sequence \\
 \bottomrule
 \end{longtable}
 
+\paragraph{Overlong Encodings}
+
+The above encoding means that there are multiple ways to encode some values, and decoders must be
+prepared to handle that.
+
+\begin{longtable}[]{@{}p{1in}p{5in}@{}}
+\toprule
+Integer Value & Byte Sequence \\
+\midrule
+\endhead
+         0 & \texttt{80 80 80 80 00} \\
+         1 & \texttt{80 80 80 80 01} \\
+\bottomrule
+\end{longtable}
+
+The maximum length of an encoded value is 5 bytes. Decoders must reject the following values.
+
+\begin{longtable}[]{@{}p{2in}p{4in}@{}}
+\toprule
+Error Reason & Byte Sequence \\
+\midrule
+\endhead
+         Went 5 bytes without ending & \texttt{80 80 80 80 80 00} \\
+         Encodes a value greater than $2^{32}$ & \texttt{FF FF FF FF 1F} \\
+\bottomrule
+\end{longtable}
+
+Encoders should encode using the shortest encoding, however.
+
 \hypertarget{example-code}{\subparagraph{Example Code}\label{example-code}}
 
 \begin{Shaded}
