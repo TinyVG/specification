@@ -536,6 +536,7 @@ Index & Name & Short description \\
 8 & outline fill polygon & This command draws a filled polygon with an outline. \\
 9 & outline fill rectangles & This command draws several filled rectangles with an outline. \\
 10 & outline fill path & This command combines the fill and draw line path command into one. \\
+11 & text hint path & This command defines the contents and glyph location for text \\
 \bottomrule
 \end{longtable}
 
@@ -891,6 +892,31 @@ performs \emph{Draw Line Path} with \texttt{line\_style} and
 
 The outline commands use a reduced number of elements, the maximum
 number of points is 64.
+
+\hypertarget{text-hint}{\subsubsection{Text Hint}\label{text-hint}}
+
+Defines the metadata for rendered text.
+
+The command is structured like this:
+
+\begin{longtable}[]{@{}p{1in}p{1.6in}p{3.4in}@{}}
+\toprule
+Field & Type & Description \\
+\midrule
+\endhead
+center        & \texttt{Point}                          & The center of the descender line for the defined text. \\
+rotation      & \texttt{Unit}                           & The amount of degrees the text is rotated. \\
+height        & \texttt{Unit}                           & The font size or distance from the ascender line to the descender line for the text. \\
+text\_length  & \texttt{VarUInt}                        & The number of bytes used to encode the text. \\
+text          & \texttt{{[}text\_length{]}u8}           & The UTF-8 encoded bytes corresponding to the text. \\
+glyph\_length & \texttt{VarUInt}                        & The number of glyphs within the text. \\
+glyph\_offset & \texttt{{[}glyph\_length{]}{[}2{]}Unit} & The start and end offset on the descender line from the center for each glyph. \\
+\bottomrule
+\end{longtable}
+
+This command only provides metadata for accessibility or text selection tools
+for the position and content of text. A renderer can safely ignore this command
+since it should not have any effect on the resulting graphic.
 
 \hypertarget{stylestyle_type}{\subsection{\texorpdfstring{\texttt{Style(style\_type)}}{Style(style\_type)}}\label{stylestyle_type}}
 
