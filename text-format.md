@@ -114,6 +114,17 @@ This format is meant for debugging/development and is not required to be impleme
         )
       )
     )
+    (
+      text_hint
+      (<center_x> <center_y>)
+      <rotation>
+      <height>
+      "text content"
+      (
+          (<glyph start offset> <glyph end offset)
+          ...
+      )
+    )
   )
 )
 ```
