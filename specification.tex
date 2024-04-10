@@ -306,7 +306,7 @@ Value & Enumeration & Description \\
 0 & RGBA 8888 & Each color is a 4-tuple (red, green, blue, alpha) of bytes with the color channels encoded in sRGB and the alpha as linear alpha. \\
 1 & RGB 565 & Each color is encoded as a 3-tuple (red, green, blue) with 16 bit per color. While red and blue both use 5 bit, the green channel uses 6 bit. red uses bit range 0...4, green bits 5...10 and blue bits 11...15. This color also uses the sRGB color space.\\
 2 & RGBA F32 & Each color is a 4-tuple (red, green ,blue, alpha) of binary32 IEEE 754 floating point value with the color channels encoded in scRGB and the alpha as linear alpha. A color value of \texttt{1.0} is full intensity, while a value of \texttt{0.0} is zero intensity. \\
-3 & Custom & The custom color encoding is \emph{defined undefined}. The information how these colors are encoded must be implemented via external means. \\
+3 & Custom & The custom color encoding is \emph{undefined}. The information how these colors are encoded must be implemented via external means. \\
 \bottomrule
 \end{longtable}
 
