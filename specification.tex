@@ -816,12 +816,12 @@ The command is structured like this:
 Field & Type & Description \\
 \midrule
 \endhead
-segment\_count   & \texttt{u6}                          & The number of points in the polygon. This value is offset by 1. \\
-sec\_style\_kind & \texttt{u2}                          & The secondary style used in this command. \\
-fill\_style      & \texttt{Style(prim\_style\_kind)}    & The style that is used to fill the polygon. \\
-line\_style      & \texttt{Style(sec\_style\_kind)}     & The style that is used to draw the outline of the polygon. \\
-line\_width      & \texttt{Unit}                        & The width of the line. \\
-points           & \texttt{{[}segment\_count+1{]}Point} & The set of points of this polygon. \\
+point\_count     & \texttt{u6}                        & The number of points in the polygon. This value is offset by 1. \\
+sec\_style\_kind & \texttt{u2}                        & The secondary style used in this command. \\
+fill\_style      & \texttt{Style(prim\_style\_kind)}  & The style that is used to fill the polygon. \\
+line\_style      & \texttt{Style(sec\_style\_kind)}   & The style that is used to draw the outline of the polygon. \\
+line\_width      & \texttt{Unit}                      & The width of the line. \\
+points           & \texttt{{[}point\_count+1{]}Point} & The set of points of this polygon. \\
 \bottomrule
 \end{longtable}
 
